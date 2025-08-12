@@ -1,0 +1,21 @@
+---
+title: "Anáisis de Metagenoma usando SqueezeMeta"
+author: "OMICs Analysis"
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    theme: journal
+editor: visual
+execute:
+  engine: knitr
+lang: es
+---
+
+![](images/logo_OAN_for_white.png){fig-align="center" width="300"}
+
+# Introducción
+
+# Preparación de datos
+
+# Visualización de datos
