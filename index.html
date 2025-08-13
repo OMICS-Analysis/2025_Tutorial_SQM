@@ -86,7 +86,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#pre-procesamiento-y-control-de-calidad" id="toc-pre-procesamiento-y-control-de-calidad" class="nav-link" data-scroll-target="#pre-procesamiento-y-control-de-calidad">Pre procesamiento y control de calidad</a>
   <ul class="collapse">
   <li><a href="#cutadapt" id="toc-cutadapt" class="nav-link" data-scroll-target="#cutadapt">Cutadapt</a></li>
-  <li><a href="#trommomatic" id="toc-trommomatic" class="nav-link" data-scroll-target="#trommomatic">Trommomatic</a></li>
+  <li><a href="#trimmomatic" id="toc-trimmomatic" class="nav-link" data-scroll-target="#trimmomatic">Trimmomatic</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#visualización-de-datos" id="toc-visualización-de-datos" class="nav-link" data-scroll-target="#visualización-de-datos">Visualización de datos</a></li>
@@ -211,12 +211,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <section id="cutadapt" class="level3">
 <h3 class="anchored" data-anchor-id="cutadapt">Cutadapt</h3>
+<p>Cutadapt es util para limpiar lecturas paired-end de Illumina en archivos FASTQ:</p>
+<ul>
+<li><p><strong><code>-a</code></strong> y <strong><code>-A</code></strong>: Elimina adaptadores específicos de Illumina (forward: GATCGGAAGAGCACACGTCTGAACTCCAGTCA; reverse: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT).</p></li>
+<li><p><strong><code>--trim-n</code></strong>: Recorta bases “N” (indeterminadas) de los extremos.</p></li>
+<li><p><strong><code>--match-read-wildcards</code></strong>: Permite comodines en las lecturas para coincidencias flexibles.</p></li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate cutadapt</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> 1_QC</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> 2025_Demo_sqm</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> 2025_Demo_sqm</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cutadapt</span> <span class="dt">\</span></span>
@@ -230,14 +235,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>data/SRR19746202_2.fastq.gz <span class="op">&gt;</span> SRR19746202_cutadapt.log <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="trommomatic" class="level3">
-<h3 class="anchored" data-anchor-id="trommomatic">Trommomatic</h3>
+<section id="trimmomatic" class="level3">
+<h3 class="anchored" data-anchor-id="trimmomatic">Trimmomatic</h3>
+<p>El siguiente código lo que hace aplicar filtros:</p>
+<ul>
+<li><p><code>LEADING:15</code>: Elimina bases iniciales con calidad <code>&lt;15</code>.</p></li>
+<li><p><code>TRAILING:15</code>: Elimina bases finales con calidad <code>&lt;15</code>.</p></li>
+<li><p><code>SLIDINGWINDOW:10:15</code>: Recorta si el promedio de calidad en ventana de 10 bases es <code>&lt;15</code>.</p></li>
+<li><p><code>AVGQUAL:25</code>: Descarta lecturas con calidad promedio <code>&lt;25</code>.</p></li>
+<li><p><code>MINLEN:50</code>: Descarta lecturas <code>&lt;50</code> bases.</p></li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">-jar</span>  /home/ubuntu/bin/Trimmomatic-0.39/lib/jbzip2-0.9.jar PE <span class="at">-threads</span> <span class="va">$threads</span> <span class="at">-phred33</span><span class="dt">\</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1_QC/SRR19746202_1.fastq.gz"</span> <span class="st">"1_QC/SRR19746202_2.fastq.gz"</span><span class="dt">\</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1_QC/SRR19746202_1_trimmed.fastq.gz"</span> <span class="st">"SRR19746202_1_discard.fastq"</span> <span class="dt">\</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1_QC/SRR19746202_2_trimmed.fastq.gz"</span> <span class="st">"SRR19746202_2_discard.fastq"</span> <span class="dt">\</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    LEADING:15 TRAILING:15 SLIDINGWINDOW:10:15 AVGQUAL:25 MINLEN:50 <span class="op">&gt;</span> <span class="st">"SRR19746202_trimmomatic.log"</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">-jar</span> bin/trimmomatic.jar PE <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>-threads 7 <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>-phred33 <span class="dt">\</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">"1_QC/SRR19746202_1.fastq.gz"</span> <span class="st">"1_QC/SRR19746202_2.fastq.gz"</span><span class="dt">\</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">"1_QC/SRR19746202_1_trimmed.fastq.gz"</span> <span class="st">"SRR19746202_1_discard.fastq"</span> <span class="dt">\</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">"1_QC/SRR19746202_2_trimmed.fastq.gz"</span> <span class="st">"SRR19746202_2_discard.fastq"</span> <span class="dt">\</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>LEADING:15 TRAILING:15 SLIDINGWINDOW:10:15 AVGQUAL:25 MINLEN:50 <span class="op">&gt;</span> <span class="st">"SRR19746202_trimmomatic.log"</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>

@@ -81,11 +81,18 @@ Esto es particularmente útil en flujos de trabajo de metagenómica, transcript�
 
 ### Cutadapt
 
+Cutadapt es util para limpiar lecturas paired-end de Illumina en archivos FASTQ:
+
+-   **`-a`** y **`-A`**: Elimina adaptadores específicos de Illumina (forward: GATCGGAAGAGCACACGTCTGAACTCCAGTCA; reverse: AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT).
+
+-   **`--trim-n`**: Recorta bases "N" (indeterminadas) de los extremos.
+
+-   **`--match-read-wildcards`**: Permite comodines en las lecturas para coincidencias flexibles.
+
 ```{bash, eval=FALSE}
 conda activate cutadapt
 
 mkdir 1_QC
-
 cd 2025_Demo_sqm
 ```
 
@@ -102,14 +109,28 @@ data/SRR19746202_2.fastq.gz > SRR19746202_cutadapt.log 2>&1
 
 ```
 
-### Trommomatic
+### Trimmomatic
+
+El siguiente código lo que hace aplicar filtros:
+
+-   `LEADING:15`: Elimina bases iniciales con calidad `<15`.
+
+-   `TRAILING:15`: Elimina bases finales con calidad `<15`.
+
+-   `SLIDINGWINDOW:10:15`: Recorta si el promedio de calidad en ventana de 10 bases es `<15`.
+
+-   `AVGQUAL:25`: Descarta lecturas con calidad promedio `<25`.
+
+-   `MINLEN:50`: Descarta lecturas `<50` bases.
 
 ```{bash, eval=FALSE}
-java -jar  /home/ubuntu/bin/Trimmomatic-0.39/lib/jbzip2-0.9.jar PE -threads $threads -phred33\
-	"1_QC/SRR19746202_1.fastq.gz" "1_QC/SRR19746202_2.fastq.gz"\
-	"1_QC/SRR19746202_1_trimmed.fastq.gz" "SRR19746202_1_discard.fastq" \
-	"1_QC/SRR19746202_2_trimmed.fastq.gz" "SRR19746202_2_discard.fastq" \
-	LEADING:15 TRAILING:15 SLIDINGWINDOW:10:15 AVGQUAL:25 MINLEN:50 > "SRR19746202_trimmomatic.log" 2>&1
+java -jar bin/trimmomatic.jar PE \
+-threads 7 \
+-phred33 \
+"1_QC/SRR19746202_1.fastq.gz" "1_QC/SRR19746202_2.fastq.gz"\
+"1_QC/SRR19746202_1_trimmed.fastq.gz" "SRR19746202_1_discard.fastq" \
+"1_QC/SRR19746202_2_trimmed.fastq.gz" "SRR19746202_2_discard.fastq" \
+LEADING:15 TRAILING:15 SLIDINGWINDOW:10:15 AVGQUAL:25 MINLEN:50 > "SRR19746202_trimmomatic.log" 2>&1
 ```
 
 # Visualización de datos
