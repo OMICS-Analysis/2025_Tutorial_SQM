@@ -39,14 +39,14 @@ Para descargar los datos usaremos [`RSA Toolkit`](https://github.com/ncbi/sra-to
 mkdir 2025_Demo_sqm
 cd 2025_Demo_sqm
 mkdir data
+cd data
 ```
 
 Este mismo proceso se realizó para todos los `SRA ID`.
 
 ```{bash, eval=FALSE}
-cd data
-
 prefetch SRR19746212
+
 parallel-fastq-dump \
 --sra-id SRR19746212 \
 -t 7 \
