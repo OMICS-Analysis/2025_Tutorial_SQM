@@ -33,7 +33,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="index_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="index_files/libs/bootstrap/bootstrap-a71a25f19e128005acb9c00d38d9c2cf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="index_files/libs/bootstrap/bootstrap-93c0463f95dbdd7f1397c0dcb1e221e6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -86,6 +86,49 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <section id="introducción" class="level1">
 <h1>Introducción</h1>
+<p>ADVERTENCIA ⚠️: En este tutorial vamos a echar a andar el flujo de trabajo <a href="https://github.com/jtamames/SqueezeMeta"><code>SqueezeMeta</code></a>, ten en cuenta que para este punto debes tener suficiente espacio de memoria (<code>470Gb</code>) en tu computadora para generar la base de datos que utiliza esta herramienta. También ten en cuenta tener minimo <code>8Gb</code> de <code>RAM</code>.</p>
+<p>Para este tutorial vamos a trabajar con datos del estudio “<a href="https://www.nature.com/articles/s41597-022-01777-6">Effects of heat stress on 16S rDNA, metagenome and metabolome in Holstein cows at different growth stages</a>”. Para fines educativos solo usaremos un subconjunto de los datos de las vacas Holstein en tres etapas de crecimiento, en condiciones normales y con estrés termico.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>SRA ID</th>
+<th>Condición</th>
+<th>Etapa de crecimiento</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746212">SRR19746212</a></td>
+<td>Periodo Normal</td>
+<td>Novillas en crecimiento</td>
+</tr>
+<tr class="even">
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746215">SRR19746215</a></td>
+<td>Estrés Termico</td>
+<td>Novillas en crecimiento</td>
+</tr>
+<tr class="odd">
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746202">SRR19746202</a></td>
+<td>Periodo Normal</td>
+<td>Novillas</td>
+</tr>
+<tr class="even">
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746205">SRR19746205</a></td>
+<td>Estrés Termico</td>
+<td>Novillas</td>
+</tr>
+<tr class="odd">
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746208">SRR19746208</a></td>
+<td>Periodo Normal</td>
+<td>Vacas Lactantes</td>
+</tr>
+<tr class="even">
+<td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746219">SRR19746219</a></td>
+<td>Estrés Termico</td>
+<td>Vacas Lactantes</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="preparación-de-datos" class="level1">
 <h1>Preparación de datos</h1>
