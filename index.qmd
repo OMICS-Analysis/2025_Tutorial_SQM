@@ -140,7 +140,22 @@ sudo apt install bowtie2
 ```
 
 ```{bash, eval=FALSE}
+cd data
+
 wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/263/795/GCF_002263795.3_ARS-UCD2.0/GCF_002263795.3_ARS-UCD2.0_genomic.fna.gz
+```
+
+```{bash, eval=FALSE}
+mv GCF_002263795.3_ARS-UCD2.0_genomic.fna.gz bos_taurus_host.fna.gz
+mkdir db_host
+```
+
+```{bash, eval=FALSE}
+bowtie2-build bos_tauros_host.fna.gz --seed 123 bos_tauros_host.fna.gz db_host
+```
+
+```{bash, eval=FALSE}
+
 ```
 
 # Visualización de datos
