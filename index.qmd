@@ -33,7 +33,7 @@ Para este tutorial vamos a trabajar con datos del estudio "[Effects of heat stre
 
 ## Preparación de datos
 
-Para descargar los datos usaremos [`RSA Toolkit`](https://github.com/ncbi/sra-tools/wiki/02.-Installing-SRA-Toolkit) y [`parallel-fastq-dump`](https://github.com/rvalieris/parallel-fastq-dump), a continuación te muestro el ejemplo para uno. Por otra parte vamos a generar nuestro directorio de trabajo.
+Para descargar los datos usaremos [`RSA Toolkit`](https://github.com/ncbi/sra-tools/wiki/02.-Installing-SRA-Toolkit) y [`parallel-fastq-dump`](https://github.com/rvalieris/parallel-fastq-dump), a continuación el ejemplo para uno. Por otra parte vamos a generar nuestro directorio de trabajo.
 
 ```{bash, eval=FALSE}
 mkdir 2025_Demo_sqm
@@ -53,6 +53,63 @@ parallel-fastq-dump \
 --outdir ./ \
 --split-files \
 --gzip
+```
+
+## Pre procesamiento y control de calidad
+
+[`Trimmomatic`](https://github.com/timflutre/trimmomatic) es una herramienta flexible y eficiente diseñada específicamente para el preprocesamiento de datos de secuenciación de próxima generación (NGS) generados por plataformas Illumina. Se utiliza principalmente para realizar tareas de recorte (trimming) y filtrado de lecturas en formato FASTQ, tanto en datos paired-end como single-end. Sus funciones clave incluyen:
+
+-   **Remoción de adaptadores**: Elimina secuencias de adaptadores Illumina que pueden contaminar las lecturas, lo que es esencial para evitar problemas en alineamientos posteriores.
+
+-   **Recorte de bases de baja calidad**: Corta bases al inicio o final de las lecturas que no cumplen con un umbral de calidad (por ejemplo, usando Phred scores), mejorando la calidad general de los datos.
+
+-   **Filtrado de lecturas**: Descarta lecturas cortas, de baja calidad o con patrones no deseados, como secuencias de baja complejidad.
+
+-   **Otras operaciones**: Puede realizar cropping (recorte fijo de longitud) y sliding window para evaluar calidad en ventanas móviles.
+
+Esto es particularmente útil en flujos de trabajo de metagenómica, transcriptómica o genómica con datos Illumina, ya que ayuda a limpiar los datos crudos antes de análisis downstream como ensamblaje o mapeo, reduciendo errores y mejorando la precisión.
+
+[`Cutadapt`](https://cutadapt.readthedocs.io/en/stable/installation.html), por su parte, es una herramienta versátil enfocada en la remoción de adaptadores y secuencias no deseadas de lecturas de secuenciación de alto rendimiento, con un énfasis en datos Illumina. Sus usos principales en secuencias Illumina son:
+
+-   **Remoción de adaptadores**: Busca y elimina adaptadores (como los universales de Illumina) en cualquier posición de las lecturas, ya sea al 3' o 5', o incluso en el medio, lo que es común en datos paired-end o single-end contaminados.
+
+-   **Recorte basado en calidad**: Puede trimmed bases de baja calidad desde los extremos de las lecturas, similar a Trimmomatic, pero con opciones más flexibles para filtrado.
+
+-   **Filtrado y modificación de lecturas**: Permite descartar lecturas demasiado cortas, con mismatches excesivos o que no cumplan criterios específicos, y soporta operaciones como demultiplexing (separación por barcodes).
+
+-   **Otras funcionalidades**: Maneja poly-A tails, secuencias repetitivas o primers, y es eficiente para grandes volúmenes de datos.
+
+### Cutadapt
+
+```{bash, eval=FALSE}
+conda activate cutadapt
+
+mkdir 1_QC
+
+cd 2025_Demo_sqm
+```
+
+```{bash, eval=FALSE}
+cutadapt \
+-a GATCGGAAGAGCACACGTCTGAACTCCAGTCA \
+-A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT \
+--trim-n \
+--match-read-wildcards -j 7 \
+-o "1_QC/SRR19746202_1.fastq.gz" \
+-p "1_QC/SRR19746202_2.fastq.gz" \
+data/SRR19746202_1.fastq.gz \
+data/SRR19746202_2.fastq.gz > SRR19746202_cutadapt.log 2>&1
+
+```
+
+### Trommomatic
+
+```{bash, eval=FALSE}
+java -jar  /home/ubuntu/bin/Trimmomatic-0.39/lib/jbzip2-0.9.jar PE -threads $threads -phred33\
+	"1_QC/SRR19746202_1.fastq.gz" "1_QC/SRR19746202_2.fastq.gz"\
+	"1_QC/SRR19746202_1_trimmed.fastq.gz" "SRR19746202_1_discard.fastq" \
+	"1_QC/SRR19746202_2_trimmed.fastq.gz" "SRR19746202_2_discard.fastq" \
+	LEADING:15 TRAILING:15 SLIDINGWINDOW:10:15 AVGQUAL:25 MINLEN:50 > "SRR19746202_trimmomatic.log" 2>&1
 ```
 
 # Visualización de datos

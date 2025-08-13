@@ -83,6 +83,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a>
   <ul class="collapse">
   <li><a href="#preparación-de-datos" id="toc-preparación-de-datos" class="nav-link" data-scroll-target="#preparación-de-datos">Preparación de datos</a></li>
+  <li><a href="#pre-procesamiento-y-control-de-calidad" id="toc-pre-procesamiento-y-control-de-calidad" class="nav-link" data-scroll-target="#pre-procesamiento-y-control-de-calidad">Pre procesamiento y control de calidad</a>
+  <ul class="collapse">
+  <li><a href="#cutadapt" id="toc-cutadapt" class="nav-link" data-scroll-target="#cutadapt">Cutadapt</a></li>
+  <li><a href="#trommomatic" id="toc-trommomatic" class="nav-link" data-scroll-target="#trommomatic">Trommomatic</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#visualización-de-datos" id="toc-visualización-de-datos" class="nav-link" data-scroll-target="#visualización-de-datos">Visualización de datos</a></li>
   </ul>
@@ -168,7 +173,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <section id="preparación-de-datos" class="level2">
 <h2 class="anchored" data-anchor-id="preparación-de-datos">Preparación de datos</h2>
-<p>Para descargar los datos usaremos <a href="https://github.com/ncbi/sra-tools/wiki/02.-Installing-SRA-Toolkit"><code>RSA Toolkit</code></a> y <a href="https://github.com/rvalieris/parallel-fastq-dump"><code>parallel-fastq-dump</code></a>, a continuación te muestro el ejemplo para uno. Por otra parte vamos a generar nuestro directorio de trabajo.</p>
+<p>Para descargar los datos usaremos <a href="https://github.com/ncbi/sra-tools/wiki/02.-Installing-SRA-Toolkit"><code>RSA Toolkit</code></a> y <a href="https://github.com/rvalieris/parallel-fastq-dump"><code>parallel-fastq-dump</code></a>, a continuación el ejemplo para uno. Por otra parte vamos a generar nuestro directorio de trabajo.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> 2025_Demo_sqm</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> 2025_Demo_sqm</span>
@@ -186,6 +191,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>--split-files <span class="dt">\</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>--gzip</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="pre-procesamiento-y-control-de-calidad" class="level2">
+<h2 class="anchored" data-anchor-id="pre-procesamiento-y-control-de-calidad">Pre procesamiento y control de calidad</h2>
+<p><a href="https://github.com/timflutre/trimmomatic"><code>Trimmomatic</code></a> es una herramienta flexible y eficiente diseñada específicamente para el preprocesamiento de datos de secuenciación de próxima generación (NGS) generados por plataformas Illumina. Se utiliza principalmente para realizar tareas de recorte (trimming) y filtrado de lecturas en formato FASTQ, tanto en datos paired-end como single-end. Sus funciones clave incluyen:</p>
+<ul>
+<li><p><strong>Remoción de adaptadores</strong>: Elimina secuencias de adaptadores Illumina que pueden contaminar las lecturas, lo que es esencial para evitar problemas en alineamientos posteriores.</p></li>
+<li><p><strong>Recorte de bases de baja calidad</strong>: Corta bases al inicio o final de las lecturas que no cumplen con un umbral de calidad (por ejemplo, usando Phred scores), mejorando la calidad general de los datos.</p></li>
+<li><p><strong>Filtrado de lecturas</strong>: Descarta lecturas cortas, de baja calidad o con patrones no deseados, como secuencias de baja complejidad.</p></li>
+<li><p><strong>Otras operaciones</strong>: Puede realizar cropping (recorte fijo de longitud) y sliding window para evaluar calidad en ventanas móviles.</p></li>
+</ul>
+<p>Esto es particularmente útil en flujos de trabajo de metagenómica, transcriptómica o genómica con datos Illumina, ya que ayuda a limpiar los datos crudos antes de análisis downstream como ensamblaje o mapeo, reduciendo errores y mejorando la precisión.</p>
+<p><a href="https://cutadapt.readthedocs.io/en/stable/installation.html"><code>Cutadapt</code></a>, por su parte, es una herramienta versátil enfocada en la remoción de adaptadores y secuencias no deseadas de lecturas de secuenciación de alto rendimiento, con un énfasis en datos Illumina. Sus usos principales en secuencias Illumina son:</p>
+<ul>
+<li><p><strong>Remoción de adaptadores</strong>: Busca y elimina adaptadores (como los universales de Illumina) en cualquier posición de las lecturas, ya sea al 3’ o 5’, o incluso en el medio, lo que es común en datos paired-end o single-end contaminados.</p></li>
+<li><p><strong>Recorte basado en calidad</strong>: Puede trimmed bases de baja calidad desde los extremos de las lecturas, similar a Trimmomatic, pero con opciones más flexibles para filtrado.</p></li>
+<li><p><strong>Filtrado y modificación de lecturas</strong>: Permite descartar lecturas demasiado cortas, con mismatches excesivos o que no cumplan criterios específicos, y soporta operaciones como demultiplexing (separación por barcodes).</p></li>
+<li><p><strong>Otras funcionalidades</strong>: Maneja poly-A tails, secuencias repetitivas o primers, y es eficiente para grandes volúmenes de datos.</p></li>
+</ul>
+<section id="cutadapt" class="level3">
+<h3 class="anchored" data-anchor-id="cutadapt">Cutadapt</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate cutadapt</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> 1_QC</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> 2025_Demo_sqm</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">cutadapt</span> <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>-a GATCGGAAGAGCACACGTCTGAACTCCAGTCA <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>-A AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>--trim-n <span class="dt">\</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>--match-read-wildcards <span class="at">-j</span> 7 <span class="dt">\</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>-o <span class="st">"1_QC/SRR19746202_1.fastq.gz"</span> <span class="dt">\</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>-p <span class="st">"1_QC/SRR19746202_2.fastq.gz"</span> <span class="dt">\</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>data/SRR19746202_1.fastq.gz <span class="dt">\</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>data/SRR19746202_2.fastq.gz <span class="op">&gt;</span> SRR19746202_cutadapt.log <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="trommomatic" class="level3">
+<h3 class="anchored" data-anchor-id="trommomatic">Trommomatic</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">java</span> <span class="at">-jar</span>  /home/ubuntu/bin/Trimmomatic-0.39/lib/jbzip2-0.9.jar PE <span class="at">-threads</span> <span class="va">$threads</span> <span class="at">-phred33</span><span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1_QC/SRR19746202_1.fastq.gz"</span> <span class="st">"1_QC/SRR19746202_2.fastq.gz"</span><span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1_QC/SRR19746202_1_trimmed.fastq.gz"</span> <span class="st">"SRR19746202_1_discard.fastq"</span> <span class="dt">\</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"1_QC/SRR19746202_2_trimmed.fastq.gz"</span> <span class="st">"SRR19746202_2_discard.fastq"</span> <span class="dt">\</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    LEADING:15 TRAILING:15 SLIDINGWINDOW:10:15 AVGQUAL:25 MINLEN:50 <span class="op">&gt;</span> <span class="st">"SRR19746202_trimmomatic.log"</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 </section>
 </section>
 <section id="visualización-de-datos" class="level1">
