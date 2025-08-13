@@ -1,5 +1,5 @@
 ---
-title: "Anáisis de Metagenoma usando SqueezeMeta"
+title: "Análisis de Metagenoma usando SqueezeMeta"
 author: "OMICs Analysis"
 format: 
   html:
@@ -16,18 +16,18 @@ lang: es
 
 # Introducción
 
-ADVERTENCIA ⚠️: En este tutorial vamos a echar a andar el flujo de trabajo [`SqueezeMeta`](https://github.com/jtamames/SqueezeMeta), ten en cuenta que para este punto debes tener suficiente espacio de memoria (`470Gb`) en tu computadora para generar la base de datos que utiliza esta herramienta. También ten en cuenta tener minimo `8Gb` de `RAM`.
+ADVERTENCIA ⚠️: En este tutorial vamos a echar a andar el flujo de trabajo [`SqueezeMeta`](https://github.com/jtamames/SqueezeMeta), ten en cuenta que para este punto debes tener suficiente espacio de memoria (`470Gb`) en tu computadora para generar la base de datos que utiliza esta herramienta. También ten en cuenta tener mínimo `8Gb` de `RAM`.
 
-Para este tutorial vamos a trabajar con datos del estudio "[Effects of heat stress on 16S rDNA, metagenome and metabolome in Holstein cows at different growth stages](https://www.nature.com/articles/s41597-022-01777-6)". Para fines educativos solo usaremos un subconjunto de los datos de las vacas Holstein en tres etapas de crecimiento, en condiciones normales y con estrés termico.
+Para este tutorial vamos a trabajar con datos del estudio "[Effects of heat stress on 16S rDNA, metagenome and metabolome in Holstein cows at different growth stages](https://www.nature.com/articles/s41597-022-01777-6)". Para fines educativos solo usaremos un subconjunto de los datos de las vacas Holstein en tres etapas de crecimiento, en condiciones normales y con estrés térmico.
 
 | SRA ID | Condición | Etapa de crecimiento |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | [SRR19746212](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746212) | Periodo Normal | Novillas en crecimiento |
-| [SRR19746215](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746215) | Estrés Termico | Novillas en crecimiento |
+| [SRR19746215](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746215) | Estrés Térmico | Novillas en crecimiento |
 | [SRR19746202](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746202) | Periodo Normal | Novillas |
-| [SRR19746205](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746205) | Estrés Termico | Novillas |
+| [SRR19746205](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746205) | Estrés Térmico | Novillas |
 | [SRR19746208](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746208) | Periodo Normal | Vacas Lactantes |
-| [SRR19746219](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746219) | Estrés Termico | Vacas Lactantes |
+| [SRR19746219](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746219) | Estrés Térmico | Vacas Lactantes |
 
 # Preparación de datos
 
