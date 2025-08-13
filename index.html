@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -46,8 +80,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Tabla de contenidos</h2>
    
   <ul>
-  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a></li>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción">Introducción</a>
+  <ul class="collapse">
   <li><a href="#preparación-de-datos" id="toc-preparación-de-datos" class="nav-link" data-scroll-target="#preparación-de-datos">Preparación de datos</a></li>
+  </ul></li>
   <li><a href="#visualización-de-datos" id="toc-visualización-de-datos" class="nav-link" data-scroll-target="#visualización-de-datos">Visualización de datos</a></li>
   </ul>
 </nav>
@@ -87,6 +123,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="introducción" class="level1">
 <h1>Introducción</h1>
 <p>ADVERTENCIA ⚠️: En este tutorial vamos a echar a andar el flujo de trabajo <a href="https://github.com/jtamames/SqueezeMeta"><code>SqueezeMeta</code></a>, ten en cuenta que para este punto debes tener suficiente espacio de memoria (<code>470Gb</code>) en tu computadora para generar la base de datos que utiliza esta herramienta. También ten en cuenta tener mínimo <code>8Gb</code> de <code>RAM</code>.</p>
+<p>Los siguiente análisis se realizaron en un equipo <code>Gigabyte Technology Co., Ltd. H67MA-USB3-B3</code> procesador <code>Intel® Core™ i7-2600 CPU @ 3.40GHz × 8</code> con <code>32Gb</code> de <code>RAM</code>. Con un sistema operativo <code>Ubuntu 22.04.5 LTS</code>.</p>
 <p>Para este tutorial vamos a trabajar con datos del estudio “<a href="https://www.nature.com/articles/s41597-022-01777-6">Effects of heat stress on 16S rDNA, metagenome and metabolome in Holstein cows at different growth stages</a>”. Para fines educativos solo usaremos un subconjunto de los datos de las vacas Holstein en tres etapas de crecimiento, en condiciones normales y con estrés térmico.</p>
 <table class="caption-top table">
 <thead>
@@ -129,9 +166,27 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
+<section id="preparación-de-datos" class="level2">
+<h2 class="anchored" data-anchor-id="preparación-de-datos">Preparación de datos</h2>
+<p>Para descargar los datos usaremos <a href="https://github.com/ncbi/sra-tools/wiki/02.-Installing-SRA-Toolkit"><code>RSA Toolkit</code></a> y <a href="https://github.com/rvalieris/parallel-fastq-dump"><code>parallel-fastq-dump</code></a>, a continuación te muestro el ejemplo para uno. Por otra parte vamos a generar nuestro directorio de trabajo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> 2025_Demo_sqm</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> 2025_Demo_sqm</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> data</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Este mismo proceso se realizó para todos los <code>SRA ID</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">prefetch</span> SRR19746212</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">parallel-fastq-dump</span> <span class="dt">\</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>--sra-id SRR19746212 <span class="dt">\</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>-t 7 <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>--outdir ./ <span class="dt">\</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>--split-files <span class="dt">\</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>--gzip</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="preparación-de-datos" class="level1">
-<h1>Preparación de datos</h1>
 </section>
 <section id="visualización-de-datos" class="level1">
 <h1>Visualización de datos</h1>

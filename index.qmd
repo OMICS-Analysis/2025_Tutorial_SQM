@@ -18,6 +18,8 @@ lang: es
 
 ADVERTENCIA ⚠️: En este tutorial vamos a echar a andar el flujo de trabajo [`SqueezeMeta`](https://github.com/jtamames/SqueezeMeta), ten en cuenta que para este punto debes tener suficiente espacio de memoria (`470Gb`) en tu computadora para generar la base de datos que utiliza esta herramienta. También ten en cuenta tener mínimo `8Gb` de `RAM`.
 
+Los siguiente análisis se realizaron en un equipo `Gigabyte Technology Co., Ltd. H67MA-USB3-B3` procesador `Intel® Core™ i7-2600 CPU @ 3.40GHz × 8` con `32Gb` de `RAM`. Con un sistema operativo `Ubuntu 22.04.5 LTS`.
+
 Para este tutorial vamos a trabajar con datos del estudio "[Effects of heat stress on 16S rDNA, metagenome and metabolome in Holstein cows at different growth stages](https://www.nature.com/articles/s41597-022-01777-6)". Para fines educativos solo usaremos un subconjunto de los datos de las vacas Holstein en tres etapas de crecimiento, en condiciones normales y con estrés térmico.
 
 | SRA ID | Condición | Etapa de crecimiento |
@@ -29,6 +31,28 @@ Para este tutorial vamos a trabajar con datos del estudio "[Effects of heat stre
 | [SRR19746208](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746208) | Periodo Normal | Vacas Lactantes |
 | [SRR19746219](https://trace.ncbi.nlm.nih.gov/Traces/sra?run=SRR19746219) | Estrés Térmico | Vacas Lactantes |
 
-# Preparación de datos
+## Preparación de datos
+
+Para descargar los datos usaremos [`RSA Toolkit`](https://github.com/ncbi/sra-tools/wiki/02.-Installing-SRA-Toolkit) y [`parallel-fastq-dump`](https://github.com/rvalieris/parallel-fastq-dump), a continuación te muestro el ejemplo para uno. Por otra parte vamos a generar nuestro directorio de trabajo.
+
+```{bash, eval=FALSE}
+mkdir 2025_Demo_sqm
+cd 2025_Demo_sqm
+mkdir data
+```
+
+Este mismo proceso se realizó para todos los `SRA ID`.
+
+```{bash, eval=FALSE}
+cd data
+
+prefetch SRR19746212
+parallel-fastq-dump \
+--sra-id SRR19746212 \
+-t 7 \
+--outdir ./ \
+--split-files \
+--gzip
+```
 
 # Visualización de datos
