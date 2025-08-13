@@ -133,4 +133,14 @@ java -jar bin/trimmomatic.jar PE \
 LEADING:15 TRAILING:15 SLIDINGWINDOW:10:15 AVGQUAL:25 MINLEN:50 > "SRR19746202_trimmomatic.log" 2>&1
 ```
 
+## Quitar contanminación del Hospedero
+
+```{bash, eval=FALSE}
+sudo apt install bowtie2
+```
+
+```{bash, eval=FALSE}
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/263/795/GCF_002263795.3_ARS-UCD2.0/GCF_002263795.3_ARS-UCD2.0_genomic.fna.gz
+```
+
 # Visualización de datos

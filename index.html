@@ -88,6 +88,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#cutadapt" id="toc-cutadapt" class="nav-link" data-scroll-target="#cutadapt">Cutadapt</a></li>
   <li><a href="#trimmomatic" id="toc-trimmomatic" class="nav-link" data-scroll-target="#trimmomatic">Trimmomatic</a></li>
   </ul></li>
+  <li><a href="#quitar-contanminación-del-hospedero" id="toc-quitar-contanminación-del-hospedero" class="nav-link" data-scroll-target="#quitar-contanminación-del-hospedero">Quitar contanminación del Hospedero</a></li>
   </ul></li>
   <li><a href="#visualización-de-datos" id="toc-visualización-de-datos" class="nav-link" data-scroll-target="#visualización-de-datos">Visualización de datos</a></li>
   </ul>
@@ -255,6 +256,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>LEADING:15 TRAILING:15 SLIDINGWINDOW:10:15 AVGQUAL:25 MINLEN:50 <span class="op">&gt;</span> <span class="st">"SRR19746202_trimmomatic.log"</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
+</section>
+<section id="quitar-contanminación-del-hospedero" class="level2">
+<h2 class="anchored" data-anchor-id="quitar-contanminación-del-hospedero">Quitar contanminación del Hospedero</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install bowtie2</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/263/795/GCF_002263795.3_ARS-UCD2.0/GCF_002263795.3_ARS-UCD2.0_genomic.fna.gz</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 <section id="visualización-de-datos" class="level1">
