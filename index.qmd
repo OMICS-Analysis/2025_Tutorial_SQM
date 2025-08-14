@@ -341,4 +341,37 @@ echo "R2 reads: $(( $(zcat 1_QC/host_filter/SRR19746202_2.fastq.gz | wc -l) / 4 
 
 ```
 
-# Visualización de datos
+# SqueezeMeta
+
+Para iniciar con el flujo de trabajo de SqueezeMeta necesitagenerar un archivo de table-separate-value con el nombre de los archivos, lo nombraremos `samples.samples`
+
+```{bash, eval=FALSE}
+SRR19746202	SRR19746202_1.fastq.gz	pair1
+SRR19746202	SRR19746202_2.fastq.gz	pair2
+SRR19746205	SRR19746205_1.fastq.gz	pair1
+SRR19746205	SRR19746205_2.fastq.gz	pair2
+SRR19746208	SRR19746208_1.fastq.gz	pair1
+SRR19746208	SRR19746208_2.fastq.gz	pair2
+SRR19746212	SRR19746212_1.fastq.gz	pair1
+SRR19746212	SRR19746212_2.fastq.gz	pair2
+SRR19746215	SRR19746215_1.fastq.gz	pair1
+SRR19746215	SRR19746215_2.fastq.gz	pair2
+SRR19746219	SRR19746219_1.fastq.gz	pair1
+SRR19746219	SRR19746219_2.fastq.gz	pair2
+```
+
+```{bash, eval=FALSE}
+conda activate SqueezeMeta
+
+run_t=$(date +%s)
+vmstat -t -a -n 60 > res_squeeze_all_$run_t.log & # depends on autoshutdown
+/usr/bin/time -v \
+SqueezeMeta.pl \
+-m sequential \
+-s 1_QC/host_filter/samples.samples \
+-f 1_QC/host_filter \
+-t 7 \
+--lowmem > time_squeeze_all_$run_t.log 2>&1
+
+conda deactivate
+```

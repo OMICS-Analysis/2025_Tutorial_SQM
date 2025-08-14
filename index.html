@@ -96,7 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#automatización" id="toc-automatización" class="nav-link" data-scroll-target="#automatización">Automatización</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#visualización-de-datos" id="toc-visualización-de-datos" class="nav-link" data-scroll-target="#visualización-de-datos">Visualización de datos</a></li>
+  <li><a href="#squeezemeta" id="toc-squeezemeta" class="nav-link" data-scroll-target="#squeezemeta">SqueezeMeta</a></li>
   </ul>
 </nav>
 </div>
@@ -455,8 +455,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 </section>
-<section id="visualización-de-datos" class="level1">
-<h1>Visualización de datos</h1>
+<section id="squeezemeta" class="level1">
+<h1>SqueezeMeta</h1>
+<p>Para iniciar con el flujo de trabajo de SqueezeMeta necesitagenerar un archivo de table-separate-value con el nombre de los archivos, lo nombraremos <code>samples.samples</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746202</span> SRR19746202_1.fastq.gz  pair1</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746202</span> SRR19746202_2.fastq.gz  pair2</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746205</span> SRR19746205_1.fastq.gz  pair1</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746205</span> SRR19746205_2.fastq.gz  pair2</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746208</span> SRR19746208_1.fastq.gz  pair1</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746208</span> SRR19746208_2.fastq.gz  pair2</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746212</span> SRR19746212_1.fastq.gz  pair1</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746212</span> SRR19746212_2.fastq.gz  pair2</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746215</span> SRR19746215_1.fastq.gz  pair1</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746215</span> SRR19746215_2.fastq.gz  pair2</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746219</span> SRR19746219_1.fastq.gz  pair1</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="ex">SRR19746219</span> SRR19746219_2.fastq.gz  pair2</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate SqueezeMeta</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="va">run_t</span><span class="op">=</span><span class="va">$(</span><span class="fu">date</span> +%s<span class="va">)</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">vmstat</span> <span class="at">-t</span> <span class="at">-a</span> <span class="at">-n</span> 60 <span class="op">&gt;</span> res_squeeze_all_<span class="va">$run_t</span>.log <span class="kw">&amp;</span> <span class="co"># depends on autoshutdown</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="ex">/usr/bin/time</span> <span class="at">-v</span> <span class="dt">\</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>SqueezeMeta.pl <span class="dt">\</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>-m sequential <span class="dt">\</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>-s 1_QC/host_filter/samples.samples <span class="dt">\</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>-f 1_QC/host_filter <span class="dt">\</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>-t 7 <span class="dt">\</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>--lowmem <span class="op">&gt;</span> time_squeeze_all_<span class="va">$run_t</span>.log <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> deactivate</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 
 </main>
