@@ -151,7 +151,7 @@ mkdir db_host
 ```
 
 ```{bash, eval=FALSE}
-bowtie2-build bos_tauros_host.fna.gz --seed 123 bos_tauros_host.fna.gz db_host
+bowtie2-build --seed 123 bos_tauros_host.fna.gz db_host
 ```
 
 ```{bash, eval=FALSE}
