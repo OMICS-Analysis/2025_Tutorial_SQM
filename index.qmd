@@ -326,7 +326,8 @@ with gzip.open(inp, "rt") as inf, gzip.open(out1, "wt") as o1, gzip.open(out2, "
 ```{bash, eval=FALSE}
 chmod +x sort_fastq.py
 
-python3 sort_fastq.py 1_QC/host_filter/SRR19746202.fastq.gz \       1_QC/host_filter/SRR19746202_1.fastq.gz \
+python3 sort_fastq.py 1_QC/host_filter/SRR19746202.fastq.gz \
+1_QC/host_filter/SRR19746202_1.fastq.gz \
 1_QC/host_filter/SRR19746202_2.fastq.gz
 
 ```
