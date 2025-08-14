@@ -139,6 +139,10 @@ LEADING:15 TRAILING:15 SLIDINGWINDOW:10:15 AVGQUAL:25 MINLEN:50 > "SRR19746202_t
 sudo apt install bowtie2
 ```
 
+### Creación de base de datos del hospedero (*Bos taurus*)
+
+Descarga de su genoma
+
 ```{bash, eval=FALSE}
 cd data
 
@@ -150,27 +154,45 @@ mv GCF_002263795.3_ARS-UCD2.0_genomic.fna.gz bos_taurus_host.fna.gz
 mkdir db_host
 ```
 
+Indexación para creación de base de datos
+
 ```{bash, eval=FALSE}
 bowtie2-build --seed 123 bos_tauros_host.fna.gz db_host
 ```
 
+Alineamiento de fastq contra la base de datos
+
 ```{bash, eval=FALSE}
-bowtie2 --very-sensitive-local -p 7 --seed 123 -x ./data/db_host/db_host -1 data/SRR19746202_1.fastq.gz -2 data/SRR19746202_2.fastq.gz -S 1_QC/host_filter/SRR19746202.sam
+bowtie2 \
+--very-sensitive-local \
+-p 7 --seed 123 \
+-x ./data/db_host/db_host \
+-1 data/SRR19746202_1.fastq.gz \
+-2 data/SRR19746202_2.fastq.gz \
+-S 1_QC/host_filter/SRR19746202.sam
+```
+
+⚠️El archivo `.sam` es muy pesado, hasta `20Gb`, es indispensable comprimirlo y eliminarlo si deseas.
+
+```{bash, eval=FALSE}
+samtools view \
+-@ 7 \
+-b -f 12 -F 256 \
+1_QC/host_filter/SRR19746202.sam > 1_QC/host_filter/SRR19746202.bam
 ```
 
 ```{bash, eval=FALSE}
-samtools view -@ 7 -b -f 12 -F 256 1_QC/host_filter/SRR19746202.sam > 1_QC/host_filter/SRR19746202.bam
+samtools sort \
+-n 1_QC/host_filter/SRR19746202.bam \
+-o 1_QC/host_filter/SRR19746202.sorted.bam
 ```
 
 ```{bash, eval=FALSE}
-samtools sort -n 1_QC/host_filter/SRR19746202.bam -o 1_QC/host_filter/SRR19746202.sorted.bam
+samtools bam2fq \
+1_QC/host_filter/SRR19746202.sorted.bam > 1_QC/host_filter/SRR19746202.fastq
 ```
 
-```{bash, eval=FALSE}
-samtools bam2fq 1_QC/host_filter/SRR19746202.sorted.bam > 1_QC/host_filter/SRR19746202.fastq
-```
-
-Para hacerlo con todas las muestras automatizamos el proceso, creamos un archivo llamado `host_filter.sh`:
+Para hacerlo con todas las muestras automatizamos el proceso, y de paso comprimir el archivo `.fastq`, creamos un script llamado `host_filter.sh`:
 
 ```{bash, eval=FALSE}
 #| code-fold: true

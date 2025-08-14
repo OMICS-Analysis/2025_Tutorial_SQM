@@ -88,7 +88,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#cutadapt" id="toc-cutadapt" class="nav-link" data-scroll-target="#cutadapt">Cutadapt</a></li>
   <li><a href="#trimmomatic" id="toc-trimmomatic" class="nav-link" data-scroll-target="#trimmomatic">Trimmomatic</a></li>
   </ul></li>
-  <li><a href="#quitar-contaminación-del-hospedero" id="toc-quitar-contaminación-del-hospedero" class="nav-link" data-scroll-target="#quitar-contaminación-del-hospedero">Quitar contaminación del Hospedero</a></li>
+  <li><a href="#quitar-contaminación-del-hospedero" id="toc-quitar-contaminación-del-hospedero" class="nav-link" data-scroll-target="#quitar-contaminación-del-hospedero">Quitar contaminación del Hospedero</a>
+  <ul class="collapse">
+  <li><a href="#creación-de-base-de-datos-del-hospedero-bos-taurus" id="toc-creación-de-base-de-datos-del-hospedero-bos-taurus" class="nav-link" data-scroll-target="#creación-de-base-de-datos-del-hospedero-bos-taurus">Creación de base de datos del hospedero (<em>Bos taurus</em>)</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#visualización-de-datos" id="toc-visualización-de-datos" class="nav-link" data-scroll-target="#visualización-de-datos">Visualización de datos</a></li>
   </ul>
@@ -262,6 +265,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install bowtie2</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="creación-de-base-de-datos-del-hospedero-bos-taurus" class="level3">
+<h3 class="anchored" data-anchor-id="creación-de-base-de-datos-del-hospedero-bos-taurus">Creación de base de datos del hospedero (<em>Bos taurus</em>)</h3>
+<p>Descarga de su genoma</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -271,22 +277,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> GCF_002263795.3_ARS-UCD2.0_genomic.fna.gz bos_taurus_host.fna.gz</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> db_host</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Indexación para creación de base de datos</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2-build</span> <span class="at">--seed</span> 123 bos_tauros_host.fna.gz db_host</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Alineamiento de fastq contra la base de datos</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2</span> <span class="at">--very-sensitive-local</span> <span class="at">-p</span> 7 <span class="at">--seed</span> 123 <span class="at">-x</span> ./data/db_host/db_host <span class="at">-1</span> data/SRR19746202_1.fastq.gz <span class="at">-2</span> data/SRR19746202_2.fastq.gz <span class="at">-S</span> 1_QC/host_filter/SRR19746202.sam</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2</span> <span class="dt">\</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>--very-sensitive-local <span class="dt">\</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>-p 7 <span class="at">--seed</span> 123 <span class="dt">\</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>-x ./data/db_host/db_host <span class="dt">\</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>-1 data/SRR19746202_1.fastq.gz <span class="dt">\</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>-2 data/SRR19746202_2.fastq.gz <span class="dt">\</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>-S 1_QC/host_filter/SRR19746202.sam</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>⚠️El archivo <code>.sam</code> es muy pesado, hasta <code>20Gb</code>, es indispensable comprimirlo y eliminarlo si deseas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="dt">\</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>-@ 7 <span class="dt">\</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>-b <span class="at">-f</span> 12 <span class="at">-F</span> 256 <span class="dt">\</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>1_QC/host_filter/SRR19746202.sam <span class="op">&gt;</span> 1_QC/host_filter/SRR19746202.bam</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-@</span> 7 <span class="at">-b</span> <span class="at">-f</span> 12 <span class="at">-F</span> 256 1_QC/host_filter/SRR19746202.sam <span class="op">&gt;</span> 1_QC/host_filter/SRR19746202.bam</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="dt">\</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>-n 1_QC/host_filter/SRR19746202.bam <span class="dt">\</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>-o 1_QC/host_filter/SRR19746202.sorted.bam</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="at">-n</span> 1_QC/host_filter/SRR19746202.bam <span class="at">-o</span> 1_QC/host_filter/SRR19746202.sorted.bam</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> bam2fq <span class="dt">\</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>1_QC/host_filter/SRR19746202.sorted.bam <span class="op">&gt;</span> 1_QC/host_filter/SRR19746202.fastq</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> bam2fq 1_QC/host_filter/SRR19746202.sorted.bam <span class="op">&gt;</span> 1_QC/host_filter/SRR19746202.fastq</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Para hacerlo con todas las muestras automatizamos el proceso, creamos un archivo llamado <code>host_filter.sh</code>:</p>
+<p>Para hacerlo con todas las muestras automatizamos el proceso, y de paso comprimir el archivo <code>.fastq</code>, creamos un script llamado <code>host_filter.sh</code>:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>host_filter.sh</summary>
@@ -412,6 +433,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> sort_fastq.py 1_QC/host_filter/SRR19746202.fastq.gz <span class="dt">\ </span>      1_QC/host_filter/SRR19746202_1.fastq.gz <span class="dt">\</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>1_QC/host_filter/SRR19746202_2.fastq.gz</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
 </section>
 </section>
 <section id="visualización-de-datos" class="level1">
