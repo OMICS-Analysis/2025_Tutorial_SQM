@@ -346,6 +346,8 @@ echo "R2 reads: $(( $(zcat 1_QC/host_filter/SRR19746202_2.fastq.gz | wc -l) / 4 
 Para iniciar con el flujo de trabajo de SqueezeMeta necesitagenerar un archivo de table-separate-value con el nombre de los archivos, lo nombraremos `samples.samples`
 
 ```{bash, eval=FALSE}
+#| code-fold: true
+#| code-summary: "samples.samples:"
 SRR19746202	SRR19746202_1.fastq.gz	pair1
 SRR19746202	SRR19746202_2.fastq.gz	pair2
 SRR19746205	SRR19746205_1.fastq.gz	pair1
