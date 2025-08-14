@@ -367,6 +367,7 @@ conda activate SqueezeMeta
 
 SqueezeMeta.pl \
 -m sequential \
+-p Holstein \
 -s 1_QC/host_filter/samples.samples \
 -f 1_QC/host_filter \
 -t 7 \
