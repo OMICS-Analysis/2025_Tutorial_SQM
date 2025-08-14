@@ -157,7 +157,7 @@ mkdir db_host
 Indexación para creación de base de datos
 
 ```{bash, eval=FALSE}
-bowtie2-build --seed 123 bos_tauros_host.fna.gz db_host
+bowtie2-build --seed 123 bos_taurus_host.fna.gz db_host
 ```
 
 Alineamiento de fastq contra la base de datos
