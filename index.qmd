@@ -155,7 +155,7 @@ bowtie2-build --seed 123 bos_tauros_host.fna.gz db_host
 ```
 
 ```{bash, eval=FALSE}
-
+bowtie2 --very-sensitive-local -p 7 --seed 123 -x ./data/db_host/db_host -1 data/SRR19746202_1.fastq.gz -2 data/SRR19746202_2.fastq.gz -S 1_QC/host_filter/SRR19746202.sam
 ```
 
 # Visualización de datos

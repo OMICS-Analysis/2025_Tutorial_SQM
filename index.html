@@ -275,7 +275,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2-build</span> <span class="at">--seed</span> 123 bos_tauros_host.fna.gz db_host</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2</span> <span class="at">--very-sensitive-local</span> <span class="at">-p</span> 7 <span class="at">--seed</span> 123 <span class="at">-x</span> ./data/db_host/db_host <span class="at">-1</span> data/SRR19746202_1.fastq.gz <span class="at">-2</span> data/SRR19746202_2.fastq.gz <span class="at">-S</span> 1_QC/host_filter/SRR19746202.sam</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
