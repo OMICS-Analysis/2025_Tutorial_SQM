@@ -363,15 +363,12 @@ SRR19746219	SRR19746219_2.fastq.gz	pair2
 ```{bash, eval=FALSE}
 conda activate SqueezeMeta
 
-run_t=$(date +%s)
-vmstat -t -a -n 60 > res_squeeze_all_$run_t.log & # depends on autoshutdown
-/usr/bin/time -v \
 SqueezeMeta.pl \
 -m sequential \
 -s 1_QC/host_filter/samples.samples \
 -f 1_QC/host_filter \
 -t 7 \
---lowmem > time_squeeze_all_$run_t.log 2>&1
+--lowmem > time_squeeze_all.log 2>&1
 
 conda deactivate
 ```
