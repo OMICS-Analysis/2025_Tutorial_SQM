@@ -447,6 +447,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>1_QC/host_filter/SRR19746202_1.fastq.gz <span class="dt">\</span></span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>1_QC/host_filter/SRR19746202_2.fastq.gz</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>✅<strong>Extra</strong>. Con este código puedes ver en cada paso la cantidad de lectutas que hay en cada archivo FASTQ:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"R1 reads: </span><span class="va">$((</span> <span class="va">$(</span><span class="fu">zcat</span> 1_QC/host_filter/SRR19746202_1.fastq.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span> <span class="op">/</span> <span class="dv">4</span> <span class="va">))</span><span class="st">"</span>      <span class="pp">[</span><span class="ss">11:17:26</span><span class="pp">]</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"R2 reads: </span><span class="va">$((</span> <span class="va">$(</span><span class="fu">zcat</span> 1_QC/host_filter/SRR19746202_2.fastq.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span> <span class="op">/</span> <span class="dv">4</span> <span class="va">))</span><span class="st">"</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 </section>

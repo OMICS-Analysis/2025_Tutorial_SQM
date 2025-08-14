@@ -333,4 +333,12 @@ python3 sort_fastq.py \
 
 ```
 
+✅**Extra**. Con este código puedes ver en cada paso la cantidad de lectutas que hay en cada archivo FASTQ:
+
+```{bash, eval=FALSE}
+echo "R1 reads: $(( $(zcat 1_QC/host_filter/SRR19746202_1.fastq.gz | wc -l) / 4 ))"      [11:17:26]
+echo "R2 reads: $(( $(zcat 1_QC/host_filter/SRR19746202_2.fastq.gz | wc -l) / 4 ))"
+
+```
+
 # Visualización de datos
