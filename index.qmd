@@ -133,7 +133,7 @@ java -jar bin/trimmomatic.jar PE \
 LEADING:15 TRAILING:15 SLIDINGWINDOW:10:15 AVGQUAL:25 MINLEN:50 > "SRR19746202_trimmomatic.log" 2>&1
 ```
 
-## Quitar contanminación del Hospedero
+## Quitar contaminación del Hospedero
 
 ```{bash, eval=FALSE}
 sudo apt install bowtie2
@@ -156,6 +156,151 @@ bowtie2-build --seed 123 bos_tauros_host.fna.gz db_host
 
 ```{bash, eval=FALSE}
 bowtie2 --very-sensitive-local -p 7 --seed 123 -x ./data/db_host/db_host -1 data/SRR19746202_1.fastq.gz -2 data/SRR19746202_2.fastq.gz -S 1_QC/host_filter/SRR19746202.sam
+```
+
+```{bash, eval=FALSE}
+samtools view -@ 7 -b -f 12 -F 256 1_QC/host_filter/SRR19746202.sam > 1_QC/host_filter/SRR19746202.bam
+```
+
+```{bash, eval=FALSE}
+samtools sort -n 1_QC/host_filter/SRR19746202.bam -o 1_QC/host_filter/SRR19746202.sorted.bam
+```
+
+```{bash, eval=FALSE}
+samtools bam2fq 1_QC/host_filter/SRR19746202.sorted.bam > 1_QC/host_filter/SRR19746202.fastq
+```
+
+Para hacerlo con todas las muestras automatizamos el proceso, creamos un archivo llamado `host_filter.sh`:
+
+```{bash, eval=FALSE}
+#| code-fold: true
+#| code-summary: "host_filter.sh"
+
+#!/usr/bin/env bash
+set -euo pipefail
+
+# host_filter.sh
+# Pipeline simple: bowtie2 -> samtools (filtrar pares no mapeados) -> convertir a FASTQ comprimido (.fastq.gz)
+# Uso: ./host_filter.sh                # usa la lista por defecto
+#       ./host_filter.sh 19746205 19746208   # procesa muestras dadas (acepta con o sin prefijo SRR)
+
+samples=(19746202 19746205 19746208 19746212 19746215 19746219)
+if [ "$#" -gt 0 ]; then
+  samples=("$@")
+fi
+
+INDEX="./data/db_host/db_host"
+OUTDIR="1_QC/host_filter"
+THREADS=7
+SEED=123
+
+mkdir -p "$OUTDIR"
+
+command -v bowtie2 >/dev/null 2>&1 || { echo "ERROR: bowtie2 no está en PATH" >&2; exit 1; }
+command -v samtools >/dev/null 2>&1 || { echo "ERROR: samtools no está en PATH" >&2; exit 1; }
+
+for s in "${samples[@]}"; do
+  SAMPLE="$s"
+  if [[ "$SAMPLE" != SRR* ]]; then
+    SAMPLE="SRR${SAMPLE}"
+  fi
+
+  R1="data/${SAMPLE}_1.fastq.gz"
+  R2="data/${SAMPLE}_2.fastq.gz"
+  SAM="$OUTDIR/${SAMPLE}.sam"
+  LOG="$OUTDIR/${SAMPLE}.log"
+  BAM="$OUTDIR/${SAMPLE}.bam"
+  SORTED="$OUTDIR/${SAMPLE}.sorted.bam"
+  FQ_GZ="$OUTDIR/${SAMPLE}.fastq.gz"
+
+  echo "=== Procesando ${SAMPLE} ===" | tee -a "$LOG"
+
+  if [ ! -f "$R1" ]; then
+    echo "ERROR: $R1 no existe. Saltando ${SAMPLE}." | tee -a "$LOG"
+    continue
+  fi
+  if [ ! -f "$R2" ]; then
+    echo "ERROR: $R2 no existe. Saltando ${SAMPLE}." | tee -a "$LOG"
+    continue
+  fi
+
+  # 1) Bowtie2 -> SAM (stdout+stderr al log)
+  echo "[1] bowtie2 -> SAM" | tee -a "$LOG"
+  bowtie2 --very-sensitive-local -p "$THREADS" --seed "$SEED" \
+    -x "$INDEX" -1 "$R1" -2 "$R2" -S "$SAM" >>"$LOG" 2>&1
+
+  # 2) Filtrar lecturas donde ambos pares NO se alinearon al host (-f 12) y convertir a BAM
+  echo "[2] samtools view -b -f 12 -F 256 -> BAM" | tee -a "$LOG"
+  samtools view -@ "$THREADS" -b -f 12 -F 256 "$SAM" -o "$BAM" 2>>"$LOG"
+
+  # eliminar SAM para ahorrar espacio
+  rm -f "$SAM"
+
+  # 3) Ordenar por nombre
+  echo "[3] samtools sort -n -> $SORTED" | tee -a "$LOG"
+  samtools sort -n -@ "$THREADS" -o "$SORTED" "$BAM" 2>>"$LOG"
+  rm -f "$BAM"
+
+  # 4) Convertir a FASTQ comprimido (.fastq.gz)
+  echo "[4] samtools bam2fq -> gzip -> $FQ_GZ" | tee -a "$LOG"
+  samtools bam2fq "$SORTED" | gzip -c > "$FQ_GZ" 2>>"$LOG"
+
+  # limpiar intermedios
+  rm -f "$SORTED"
+
+  echo "=== Hecho ${SAMPLE}. Salida: $FQ_GZ . Log: $LOG ===" | tee -a "$LOG"
+  echo
+done
+
+echo "Pipeline finalizado. Archivos en: $OUTDIR"
+```
+
+```{bash, eval=FALSE}
+chmod +x host_filter.sh
+
+./host_filter
+```
+
+**PEROOO**, necesitamos las lecturas pareada para SqueezeMeta, es por ello que utilizamos el siguiente código de `Python` para separarlas. A este archivo le llamamos `sort_fastq.py`:
+
+```{python, eval=FALSE}
+#| code-fold: true
+#| code-summary: "sort_fastq.py:"
+
+#!/usr/bin/env python3
+import gzip
+import sys
+
+if len(sys.argv) != 4:
+    print("Uso: split_interleaved_fastq.py IN.fastq.gz OUT_1.fastq.gz OUT_2.fastq.gz", file=sys.stderr)
+    sys.exit(1)
+
+inp, out1, out2 = sys.argv[1], sys.argv[2], sys.argv[3]
+
+with gzip.open(inp, "rt") as inf, gzip.open(out1, "wt") as o1, gzip.open(out2, "wt") as o2:
+    buf = []
+    for i, line in enumerate(inf, 1):
+        buf.append(line)
+        if i % 8 == 0:
+            # primer par (4 líneas) -> out1; segundo par (4 líneas) -> out2
+            o1.writelines(buf[:4])
+            o2.writelines(buf[4:])
+            buf = []
+    # por si queda algo al final (archivo truncado o similar)
+    if buf:
+        if len(buf) <= 4:
+            o1.writelines(buf)
+        else:
+            o1.writelines(buf[:4])
+            o2.writelines(buf[4:])
+```
+
+```{bash, eval=FALSE}
+chmod +x sort_fastq.py
+
+python3 sort_fastq.py 1_QC/host_filter/SRR19746202.fastq.gz \       1_QC/host_filter/SRR19746202_1.fastq.gz \
+1_QC/host_filter/SRR19746202_2.fastq.gz
+
 ```
 
 # Visualización de datos

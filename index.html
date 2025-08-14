@@ -88,7 +88,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#cutadapt" id="toc-cutadapt" class="nav-link" data-scroll-target="#cutadapt">Cutadapt</a></li>
   <li><a href="#trimmomatic" id="toc-trimmomatic" class="nav-link" data-scroll-target="#trimmomatic">Trimmomatic</a></li>
   </ul></li>
-  <li><a href="#quitar-contanminación-del-hospedero" id="toc-quitar-contanminación-del-hospedero" class="nav-link" data-scroll-target="#quitar-contanminación-del-hospedero">Quitar contanminación del Hospedero</a></li>
+  <li><a href="#quitar-contaminación-del-hospedero" id="toc-quitar-contaminación-del-hospedero" class="nav-link" data-scroll-target="#quitar-contaminación-del-hospedero">Quitar contaminación del Hospedero</a></li>
   </ul></li>
   <li><a href="#visualización-de-datos" id="toc-visualización-de-datos" class="nav-link" data-scroll-target="#visualización-de-datos">Visualización de datos</a></li>
   </ul>
@@ -257,8 +257,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="quitar-contanminación-del-hospedero" class="level2">
-<h2 class="anchored" data-anchor-id="quitar-contanminación-del-hospedero">Quitar contanminación del Hospedero</h2>
+<section id="quitar-contaminación-del-hospedero" class="level2">
+<h2 class="anchored" data-anchor-id="quitar-contaminación-del-hospedero">Quitar contaminación del Hospedero</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install bowtie2</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -276,6 +276,141 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2</span> <span class="at">--very-sensitive-local</span> <span class="at">-p</span> 7 <span class="at">--seed</span> 123 <span class="at">-x</span> ./data/db_host/db_host <span class="at">-1</span> data/SRR19746202_1.fastq.gz <span class="at">-2</span> data/SRR19746202_2.fastq.gz <span class="at">-S</span> 1_QC/host_filter/SRR19746202.sam</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> view <span class="at">-@</span> 7 <span class="at">-b</span> <span class="at">-f</span> 12 <span class="at">-F</span> 256 1_QC/host_filter/SRR19746202.sam <span class="op">&gt;</span> 1_QC/host_filter/SRR19746202.bam</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> sort <span class="at">-n</span> 1_QC/host_filter/SRR19746202.bam <span class="at">-o</span> 1_QC/host_filter/SRR19746202.sorted.bam</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> bam2fq 1_QC/host_filter/SRR19746202.sorted.bam <span class="op">&gt;</span> 1_QC/host_filter/SRR19746202.fastq</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Para hacerlo con todas las muestras automatizamos el proceso, creamos un archivo llamado <code>host_filter.sh</code>:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>host_filter.sh</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-euo</span> pipefail</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># host_filter.sh</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Pipeline simple: bowtie2 -&gt; samtools (filtrar pares no mapeados) -&gt; convertir a FASTQ comprimido (.fastq.gz)</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Uso: ./host_filter.sh                # usa la lista por defecto</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">#       ./host_filter.sh 19746205 19746208   # procesa muestras dadas (acepta con o sin prefijo SRR)</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="va">samples</span><span class="op">=</span><span class="va">(</span>19746202 19746205 19746208 19746212 19746215 19746219<span class="va">)</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="st">"</span><span class="va">$#</span><span class="st">"</span> <span class="ot">-gt</span> 0 <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="va">samples</span><span class="op">=</span><span class="va">(</span><span class="st">"</span><span class="va">$@</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="va">INDEX</span><span class="op">=</span><span class="st">"./data/db_host/db_host"</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="va">OUTDIR</span><span class="op">=</span><span class="st">"1_QC/host_filter"</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="va">THREADS</span><span class="op">=</span>7</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="va">SEED</span><span class="op">=</span>123</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> <span class="st">"</span><span class="va">$OUTDIR</span><span class="st">"</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> <span class="at">-v</span> bowtie2 <span class="op">&gt;</span>/dev/null <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">||</span> <span class="kw">{</span> <span class="bu">echo</span> <span class="st">"ERROR: bowtie2 no está en PATH"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span><span class="kw">;</span> <span class="bu">exit</span> 1<span class="kw">;</span> <span class="kw">}</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="bu">command</span> <span class="at">-v</span> samtools <span class="op">&gt;</span>/dev/null <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">||</span> <span class="kw">{</span> <span class="bu">echo</span> <span class="st">"ERROR: samtools no está en PATH"</span> <span class="op">&gt;&amp;</span><span class="dv">2</span><span class="kw">;</span> <span class="bu">exit</span> 1<span class="kw">;</span> <span class="kw">}</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> s <span class="kw">in</span> <span class="st">"</span><span class="va">${samples</span><span class="op">[@]</span><span class="va">}</span><span class="st">"</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>  <span class="va">SAMPLE</span><span class="op">=</span><span class="st">"</span><span class="va">$s</span><span class="st">"</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="kw">[[</span> <span class="st">"</span><span class="va">$SAMPLE</span><span class="st">"</span> <span class="ot">!=</span> SRR<span class="pp">*</span> <span class="kw">]];</span> <span class="cf">then</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="va">SAMPLE</span><span class="op">=</span><span class="st">"SRR</span><span class="va">${SAMPLE}</span><span class="st">"</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>  <span class="va">R1</span><span class="op">=</span><span class="st">"data/</span><span class="va">${SAMPLE}</span><span class="st">_1.fastq.gz"</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>  <span class="va">R2</span><span class="op">=</span><span class="st">"data/</span><span class="va">${SAMPLE}</span><span class="st">_2.fastq.gz"</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>  <span class="va">SAM</span><span class="op">=</span><span class="st">"</span><span class="va">$OUTDIR</span><span class="st">/</span><span class="va">${SAMPLE}</span><span class="st">.sam"</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>  <span class="va">LOG</span><span class="op">=</span><span class="st">"</span><span class="va">$OUTDIR</span><span class="st">/</span><span class="va">${SAMPLE}</span><span class="st">.log"</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>  <span class="va">BAM</span><span class="op">=</span><span class="st">"</span><span class="va">$OUTDIR</span><span class="st">/</span><span class="va">${SAMPLE}</span><span class="st">.bam"</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>  <span class="va">SORTED</span><span class="op">=</span><span class="st">"</span><span class="va">$OUTDIR</span><span class="st">/</span><span class="va">${SAMPLE}</span><span class="st">.sorted.bam"</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>  <span class="va">FQ_GZ</span><span class="op">=</span><span class="st">"</span><span class="va">$OUTDIR</span><span class="st">/</span><span class="va">${SAMPLE}</span><span class="st">.fastq.gz"</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"=== Procesando </span><span class="va">${SAMPLE}</span><span class="st"> ==="</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="at">-a</span> <span class="st">"</span><span class="va">$LOG</span><span class="st">"</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">[</span> <span class="ot">!</span> <span class="ot">-f</span> <span class="st">"</span><span class="va">$R1</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"ERROR: </span><span class="va">$R1</span><span class="st"> no existe. Saltando </span><span class="va">${SAMPLE}</span><span class="st">."</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="at">-a</span> <span class="st">"</span><span class="va">$LOG</span><span class="st">"</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">continue</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">[</span> <span class="ot">!</span> <span class="ot">-f</span> <span class="st">"</span><span class="va">$R2</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"ERROR: </span><span class="va">$R2</span><span class="st"> no existe. Saltando </span><span class="va">${SAMPLE}</span><span class="st">."</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="at">-a</span> <span class="st">"</span><span class="va">$LOG</span><span class="st">"</span></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">continue</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1) Bowtie2 -&gt; SAM (stdout+stderr al log)</span></span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"[1] bowtie2 -&gt; SAM"</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="at">-a</span> <span class="st">"</span><span class="va">$LOG</span><span class="st">"</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>  <span class="ex">bowtie2</span> <span class="at">--very-sensitive-local</span> <span class="at">-p</span> <span class="st">"</span><span class="va">$THREADS</span><span class="st">"</span> <span class="at">--seed</span> <span class="st">"</span><span class="va">$SEED</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">-x</span> <span class="st">"</span><span class="va">$INDEX</span><span class="st">"</span> <span class="at">-1</span> <span class="st">"</span><span class="va">$R1</span><span class="st">"</span> <span class="at">-2</span> <span class="st">"</span><span class="va">$R2</span><span class="st">"</span> <span class="at">-S</span> <span class="st">"</span><span class="va">$SAM</span><span class="st">"</span> <span class="op">&gt;&gt;</span><span class="st">"</span><span class="va">$LOG</span><span class="st">"</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2) Filtrar lecturas donde ambos pares NO se alinearon al host (-f 12) y convertir a BAM</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"[2] samtools view -b -f 12 -F 256 -&gt; BAM"</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="at">-a</span> <span class="st">"</span><span class="va">$LOG</span><span class="st">"</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>  <span class="ex">samtools</span> view <span class="at">-@</span> <span class="st">"</span><span class="va">$THREADS</span><span class="st">"</span> <span class="at">-b</span> <span class="at">-f</span> 12 <span class="at">-F</span> 256 <span class="st">"</span><span class="va">$SAM</span><span class="st">"</span> <span class="at">-o</span> <span class="st">"</span><span class="va">$BAM</span><span class="st">"</span> <span class="dv">2</span><span class="op">&gt;&gt;</span><span class="st">"</span><span class="va">$LOG</span><span class="st">"</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>  <span class="co"># eliminar SAM para ahorrar espacio</span></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rm</span> <span class="at">-f</span> <span class="st">"</span><span class="va">$SAM</span><span class="st">"</span></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3) Ordenar por nombre</span></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"[3] samtools sort -n -&gt; </span><span class="va">$SORTED</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="at">-a</span> <span class="st">"</span><span class="va">$LOG</span><span class="st">"</span></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>  <span class="ex">samtools</span> sort <span class="at">-n</span> <span class="at">-@</span> <span class="st">"</span><span class="va">$THREADS</span><span class="st">"</span> <span class="at">-o</span> <span class="st">"</span><span class="va">$SORTED</span><span class="st">"</span> <span class="st">"</span><span class="va">$BAM</span><span class="st">"</span> <span class="dv">2</span><span class="op">&gt;&gt;</span><span class="st">"</span><span class="va">$LOG</span><span class="st">"</span></span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rm</span> <span class="at">-f</span> <span class="st">"</span><span class="va">$BAM</span><span class="st">"</span></span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 4) Convertir a FASTQ comprimido (.fastq.gz)</span></span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"[4] samtools bam2fq -&gt; gzip -&gt; </span><span class="va">$FQ_GZ</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="at">-a</span> <span class="st">"</span><span class="va">$LOG</span><span class="st">"</span></span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>  <span class="ex">samtools</span> bam2fq <span class="st">"</span><span class="va">$SORTED</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">gzip</span> <span class="at">-c</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">$FQ_GZ</span><span class="st">"</span> <span class="dv">2</span><span class="op">&gt;&gt;</span><span class="st">"</span><span class="va">$LOG</span><span class="st">"</span></span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>  <span class="co"># limpiar intermedios</span></span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rm</span> <span class="at">-f</span> <span class="st">"</span><span class="va">$SORTED</span><span class="st">"</span></span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"=== Hecho </span><span class="va">${SAMPLE}</span><span class="st">. Salida: </span><span class="va">$FQ_GZ</span><span class="st"> . Log: </span><span class="va">$LOG</span><span class="st"> ==="</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="at">-a</span> <span class="st">"</span><span class="va">$LOG</span><span class="st">"</span></span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span></span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"Pipeline finalizado. Archivos en: </span><span class="va">$OUTDIR</span><span class="st">"</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x host_filter.sh</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./host_filter</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>PEROOO</strong>, necesitamos las lecturas pareada para SqueezeMeta, es por ello que utilizamos el siguiente código de <code>Python</code> para separarlas. A este archivo le llamamos <code>sort_fastq.py</code>:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>sort_fastq.py:</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gzip</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">len</span>(sys.argv) <span class="op">!=</span> <span class="dv">4</span>:</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Uso: split_interleaved_fastq.py IN.fastq.gz OUT_1.fastq.gz OUT_2.fastq.gz"</span>, <span class="bu">file</span><span class="op">=</span>sys.stderr)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    sys.exit(<span class="dv">1</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>inp, out1, out2 <span class="op">=</span> sys.argv[<span class="dv">1</span>], sys.argv[<span class="dv">2</span>], sys.argv[<span class="dv">3</span>]</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> gzip.<span class="bu">open</span>(inp, <span class="st">"rt"</span>) <span class="im">as</span> inf, gzip.<span class="bu">open</span>(out1, <span class="st">"wt"</span>) <span class="im">as</span> o1, gzip.<span class="bu">open</span>(out2, <span class="st">"wt"</span>) <span class="im">as</span> o2:</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    buf <span class="op">=</span> []</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, line <span class="kw">in</span> <span class="bu">enumerate</span>(inf, <span class="dv">1</span>):</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        buf.append(line)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i <span class="op">%</span> <span class="dv">8</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>            <span class="co"># primer par (4 líneas) -&gt; out1; segundo par (4 líneas) -&gt; out2</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>            o1.writelines(buf[:<span class="dv">4</span>])</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>            o2.writelines(buf[<span class="dv">4</span>:])</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>            buf <span class="op">=</span> []</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># por si queda algo al final (archivo truncado o similar)</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> buf:</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(buf) <span class="op">&lt;=</span> <span class="dv">4</span>:</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>            o1.writelines(buf)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>            o1.writelines(buf[:<span class="dv">4</span>])</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>            o2.writelines(buf[<span class="dv">4</span>:])</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> +x sort_fastq.py</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> sort_fastq.py 1_QC/host_filter/SRR19746202.fastq.gz <span class="dt">\ </span>      1_QC/host_filter/SRR19746202_1.fastq.gz <span class="dt">\</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>1_QC/host_filter/SRR19746202_2.fastq.gz</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
