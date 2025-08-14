@@ -160,6 +160,8 @@ Indexación para creación de base de datos
 bowtie2-build --seed 123 bos_taurus_host.fna.gz db_host
 ```
 
+### Alineamiento contra hospedero
+
 Alineamiento de fastq contra la base de datos
 
 ```{bash, eval=FALSE}
@@ -187,10 +189,14 @@ samtools sort \
 -o 1_QC/host_filter/SRR19746202.sorted.bam
 ```
 
+### Creación de archivo FASTQ *interleaved* (pareado) 
+
 ```{bash, eval=FALSE}
 samtools bam2fq \
 1_QC/host_filter/SRR19746202.sorted.bam > 1_QC/host_filter/SRR19746202.fastq
 ```
+
+### Automatización
 
 Para hacerlo con todas las muestras automatizamos el proceso, y de paso comprimir el archivo `.fastq`, creamos un script llamado `host_filter.sh`:
 
@@ -283,7 +289,7 @@ chmod +x host_filter.sh
 ./host_filter
 ```
 
-**PEROOO**, necesitamos las lecturas pareada para SqueezeMeta, es por ello que utilizamos el siguiente código de `Python` para separarlas. A este archivo le llamamos `sort_fastq.py`:
+⚠️**PEROOO**, necesitamos las lecturas pareada para `SqueezeMeta`, es por ello que utilizamos el siguiente código de `Python` para separarlas. A este archivo le llamamos `sort_fastq.py`:
 
 ```{python, eval=FALSE}
 #| code-fold: true

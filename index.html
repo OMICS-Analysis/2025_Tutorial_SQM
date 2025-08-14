@@ -91,6 +91,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#quitar-contaminación-del-hospedero" id="toc-quitar-contaminación-del-hospedero" class="nav-link" data-scroll-target="#quitar-contaminación-del-hospedero">Quitar contaminación del Hospedero</a>
   <ul class="collapse">
   <li><a href="#creación-de-base-de-datos-del-hospedero-bos-taurus" id="toc-creación-de-base-de-datos-del-hospedero-bos-taurus" class="nav-link" data-scroll-target="#creación-de-base-de-datos-del-hospedero-bos-taurus">Creación de base de datos del hospedero (<em>Bos taurus</em>)</a></li>
+  <li><a href="#alineamiento-contra-hospedero" id="toc-alineamiento-contra-hospedero" class="nav-link" data-scroll-target="#alineamiento-contra-hospedero">Alineamiento contra hospedero</a></li>
+  <li><a href="#creación-de-archivo-fastq-interleaved-pareado" id="toc-creación-de-archivo-fastq-interleaved-pareado" class="nav-link" data-scroll-target="#creación-de-archivo-fastq-interleaved-pareado">Creación de archivo FASTQ <em>interleaved</em> (pareado)</a></li>
+  <li><a href="#automatización" id="toc-automatización" class="nav-link" data-scroll-target="#automatización">Automatización</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#visualización-de-datos" id="toc-visualización-de-datos" class="nav-link" data-scroll-target="#visualización-de-datos">Visualización de datos</a></li>
@@ -281,6 +284,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2-build</span> <span class="at">--seed</span> 123 bos_taurus_host.fna.gz db_host</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="alineamiento-contra-hospedero" class="level3">
+<h3 class="anchored" data-anchor-id="alineamiento-contra-hospedero">Alineamiento contra hospedero</h3>
 <p>Alineamiento de fastq contra la base de datos</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">bowtie2</span> <span class="dt">\</span></span>
@@ -303,10 +309,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>-n 1_QC/host_filter/SRR19746202.bam <span class="dt">\</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>-o 1_QC/host_filter/SRR19746202.sorted.bam</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="creación-de-archivo-fastq-interleaved-pareado" class="level3">
+<h3 class="anchored" data-anchor-id="creación-de-archivo-fastq-interleaved-pareado">Creación de archivo FASTQ <em>interleaved</em> (pareado)</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">samtools</span> bam2fq <span class="dt">\</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>1_QC/host_filter/SRR19746202.sorted.bam <span class="op">&gt;</span> 1_QC/host_filter/SRR19746202.fastq</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="automatización" class="level3">
+<h3 class="anchored" data-anchor-id="automatización">Automatización</h3>
 <p>Para hacerlo con todas las muestras automatizamos el proceso, y de paso comprimir el archivo <code>.fastq</code>, creamos un script llamado <code>host_filter.sh</code>:</p>
 <div class="cell">
 <details class="code-fold">
@@ -395,7 +407,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./host_filter</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><strong>PEROOO</strong>, necesitamos las lecturas pareada para SqueezeMeta, es por ello que utilizamos el siguiente código de <code>Python</code> para separarlas. A este archivo le llamamos <code>sort_fastq.py</code>:</p>
+<p>⚠️<strong>PEROOO</strong>, necesitamos las lecturas pareada para <code>SqueezeMeta</code>, es por ello que utilizamos el siguiente código de <code>Python</code> para separarlas. A este archivo le llamamos <code>sort_fastq.py</code>:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>sort_fastq.py:</summary>
