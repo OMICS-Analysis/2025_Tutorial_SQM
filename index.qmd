@@ -6,6 +6,9 @@ format:
     toc: true
     toc-depth: 3
     theme: journal
+    toc-location: left-body
+    smooth-scroll: true
+    toc-title: "Contenido"
 editor: visual
 execute:
   engine: knitr
@@ -189,7 +192,7 @@ samtools sort \
 -o 1_QC/host_filter/SRR19746202.sorted.bam
 ```
 
-### Creación de archivo FASTQ *interleaved* (pareado) 
+### Creación de archivo FASTQ *interleaved* (pareado)
 
 ```{bash, eval=FALSE}
 samtools bam2fq \
