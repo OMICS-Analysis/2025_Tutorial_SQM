@@ -70,6 +70,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="index_files/libs/bootstrap/bootstrap-a71a25f19e128005acb9c00d38d9c2cf.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <style>html{ scroll-behavior: smooth; }</style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -744,7 +773,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="notas-sobre-el-script">Notas sobre el script</h4>
 <ul>
 <li>Si prefieres trabajar con <strong>TPM</strong> (normalizado) usa el archivo <code>SRR19746202.phylum.tpm.tsv</code> o <code>SRR19746202.phylum.&lt;variant&gt;.tpm.tsv</code> si los generaste en <code>sqm2tables</code>. La lógica del script es la misma, solo cambia la lectura del archivo.</li>
-<li><code>vegan::diversity()</code> calcula Shannon (H) y Simpson (por defecto <code>simpson</code> devuelve la suma ∑ p_i^2 — aquí lo transformamos a <code>1 - D</code> para interpretarlo como probabilidad de que dos individuos sean de distinto taxón). Ajusta a la métrica que prefieras.</li>
+<li><code>vegan::diversity()</code> calcula Shannon (H) y Simpson (por defecto <code>simpson</code> devuelve la suma <span class="math inline">\(∑ p_i^2\)</span> — aquí lo transformamos a <code>1 - D</code> para interpretarlo como probabilidad de que dos individuos sean de distinto taxón). Ajusta a la métrica que prefieras.</li>
 <li>Para análisis comparativos entre <strong>varias</strong> muestras conviene crear una matriz (taxa × samples) y calcular rarefaction curves, índices α para cada muestra y β-diversity (Bray-Curtis, PCoA, NMDS) con <code>vegan</code> o exportar a <code>phyloseq</code>. También puedes cargar el proyecto directamente con el paquete <strong>SQMtools</strong> (<code>loadSQM()</code>) para aprovechar funciones pre-hechas.</li>
 </ul>
 <hr>
@@ -753,7 +782,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="flujo-recomendado-para-análisis-posteriores" class="level3">
 <h3 class="anchored" data-anchor-id="flujo-recomendado-para-análisis-posteriores">Flujo recomendado para análisis posteriores</h3>
 <ol type="1">
-<li>Generar tablas agregadas con <code>sqm2tables.py</code> (si no se crearon). ([squeezemeta.readthedocs.io][3])</li>
+<li>Generar tablas agregadas con <code>sqm2tables.py</code> (si no se crearon).</li>
 <li>Cargar las tablas en R (o usar <code>loadSQM()</code> de <strong>SQMtools</strong>) para generar objetos <code>phyloseq</code> / <code>microeco</code> si vas a hacer ecología microbiana compleja.</li>
 <li>Para pangenome (si tu interés es comparar genomas o MAGs) extraer secuencias de <code>results/bins/</code> y usar herramientas especializadas (ppanggolin, Roary, Panaroo, etc.). (SqueezeMeta no genera directamente una “matriz pangenoma” tipo Roary; su fortaleza es la anotación, mapeo y bins).</li>
 </ol>

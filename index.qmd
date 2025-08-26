@@ -593,13 +593,13 @@ print(p)
 #### Notas sobre el script
 
 -   Si prefieres trabajar con **TPM** (normalizado) usa el archivo `SRR19746202.phylum.tpm.tsv` o `SRR19746202.phylum.<variant>.tpm.tsv` si los generaste en `sqm2tables`. La lógica del script es la misma, solo cambia la lectura del archivo.
--   `vegan::diversity()` calcula Shannon (H) y Simpson (por defecto `simpson` devuelve la suma ∑ p_i\^2 — aquí lo transformamos a `1 - D` para interpretarlo como probabilidad de que dos individuos sean de distinto taxón). Ajusta a la métrica que prefieras.
+-   `vegan::diversity()` calcula Shannon (H) y Simpson (por defecto `simpson` devuelve la suma $∑ p_i^2$ — aquí lo transformamos a `1 - D` para interpretarlo como probabilidad de que dos individuos sean de distinto taxón). Ajusta a la métrica que prefieras.
 -   Para análisis comparativos entre **varias** muestras conviene crear una matriz (taxa × samples) y calcular rarefaction curves, índices α para cada muestra y β-diversity (Bray-Curtis, PCoA, NMDS) con `vegan` o exportar a `phyloseq`. También puedes cargar el proyecto directamente con el paquete **SQMtools** (`loadSQM()`) para aprovechar funciones pre-hechas.
 
 ------------------------------------------------------------------------
 
 ### Flujo recomendado para análisis posteriores
 
-1.  Generar tablas agregadas con `sqm2tables.py` (si no se crearon). (\[squeezemeta.readthedocs.io\]\[3\])
+1.  Generar tablas agregadas con `sqm2tables.py` (si no se crearon).
 2.  Cargar las tablas en R (o usar `loadSQM()` de **SQMtools**) para generar objetos `phyloseq` / `microeco` si vas a hacer ecología microbiana compleja.
 3.  Para pangenome (si tu interés es comparar genomas o MAGs) extraer secuencias de `results/bins/` y usar herramientas especializadas (ppanggolin, Roary, Panaroo, etc.). (SqueezeMeta no genera directamente una "matriz pangenoma" tipo Roary; su fortaleza es la anotación, mapeo y bins).
