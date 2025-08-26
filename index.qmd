@@ -377,3 +377,272 @@ SqueezeMeta.pl \
 
 conda deactivate
 ```
+
+---
+
+### Archivos principales que genera SqueezeMeta (organizados por etapa)
+
+> **Estructura general**:
+>
+> ```
+> SRR19746202/
+> ├─ results/
+> │  ├─ 01.SRR19746202.fasta
+> │  ├─ 02.SRR19746202.rnas
+> │  ├─ 03.SRR19746202.fna
+> │  ├─ 03.SRR19746202.faa
+> │  ├─ 06.SRR19746202.fun3.tax.wranks
+> │  ├─ 07.SRR19746202.fun3.kegg
+> │  ├─ 10.SRR19746202.mappingstat
+> │  ├─ results/bins/...
+> │  └─ tables/  ← tablas agregadas (phylum.abund.tsv, kegg.tpm.tsv, etc.)
+> └─ intermediate/
+>    └─ (muchos archivos intermedios: diamond, pfam, contigcov, mapcount...)
+> ```
+
+---
+
+### Ensamblaje
+
+* **`results/01.SRR19746202.fasta`**
+  Contiene los contigs resultantes del ensamblaje (fasta).
+  **Uso:** inspección de contigs, generación de ORFs, entrada para binning (anvì'o, metaWRAP, etc.), extracción de secuencias para búsquedas BLAST o para construir pangenomas. 
+
+* **`intermediate/01.SRR19746202.lon`** y **`intermediate/01.SRR19746202.stats`**
+  Longitudes y estadísticas del ensamblaje (N50, N90, nº de contigs, etc.).
+  **Uso:** control de calidad del ensamblaje y comparaciones entre muestras.
+
+---
+
+### Detección de RNAs
+
+* **`results/02.SRR19746202.rnas`** (fasta con rRNAs y tRNAs encontrados)
+  **Uso:** localizar 16S/23S para taxonomía basada en 16S, filtrar rRNA de contigs, o extraer genes ribosomales para análisis filogenéticos.
+
+* **`results/02.SRR19746202.16S`**
+  Asignaciones taxonómicas (ej. RDP) de las 16S detectadas.
+  **Uso:** obtener una vista rápida de taxa identificables por 16S.
+
+---
+
+### Predicción de genes (ORFs)
+
+* **`results/03.SRR19746202.fna`**
+  Secuencias nucleotídicas de ORFs predichos (CDS).
+  **Uso:** anotación funcional y cálculo de abundancias por gen.
+
+* **`results/03.SRR19746202.faa`**
+  Secuencias aminoacídicas de los ORFs predichos.
+  **Uso:** búsquedas HMM (pfam), BLAST/DIAMOND contra bases de datos funcionales/taxonómicas, clustering, construcción de pangenoma de genes.
+
+* **`results/03.SRR19746202.gff`**
+  Posiciones de genes en los contigs (GFF).
+  **Uso:** visualizar en genome browser, extraer ORFs por coordenadas, integrar con anotaciones externas. 
+
+---
+
+### Anotaciones homólogas y HMMs
+
+* **`intermediate/04.SRR19746202.nr.diamond`**, **`04.SRR19746202.kegg.diamond`**, **`04.SRR19746202.eggnog.diamond`**
+  Resultados DIAMOND (hits) contra bases NR/KEGG/eggNOG.
+  **Uso:** base para asignación taxonómica y funcional de ORFs (mejores hits, IDs KEGG/COG). 
+
+* **`intermediate/05.SRR19746202.pfam.hmm`**
+  Resultados HMM (pfam) — dominios detectados.
+  **Uso:** anotación de dominios, categorización funcional, agrupamiento por familias.
+
+---
+
+### Asignación taxonómica y funcional
+
+* **`results/06.SRR19746202.fun3.tax.wranks`** (y la variante `noidfilter`)
+  Taxonomía asignada por ORF con rangos taxonómicos (kingdom→species).
+  **Uso:** construir perfiles taxonómicos por gen/contig/bin; filtrar por identidad; estimar composición (abundancias por taxón). 
+
+* **`results/07.SRR19746202.fun3.cog`**, **`results/07.SRR19746202.fun3.kegg`**, **`results/07.SRR19746202.pfam`**
+  Asignaciones funcionales (COG, KEGG, PFAM) por ORF.
+  **Uso:** agrupar funciones, análisis funcional (pathways, enriquecimiento), generación de tablas de abundancia funcional.
+
+---
+
+### Mapeo de lecturas y medidas de abundancia
+
+* **`results/10.SRR19746202.mappingstat`**
+  Estadísticas globales de mapeo (por muestra).
+  **Uso:** control de calidad del mapeo, porcentaje de lecturas mapeadas.
+
+* **`intermediate/10.SRR19746202.mapcount`**
+  Tabla con: ORF, longitud, nº reads mapeados, bases, RPKM, cobertura, TPM, y muestra.
+  **Uso:** calcular abundancias por gen, normalizar y comparar entre muestras; entrada para `sqm2tables.py`. 
+
+* **`intermediate/10.SRR19746202.contigcov`**
+  Cobertura/RPKM/TPM por contig en cada muestra.
+  **Uso:** detectar contigs altamente cubiertos, evaluar robustez de bins.
+
+---
+
+### Binning (MAGs)
+
+* **`intermediate/binners/metabat/*`**, **`intermediate/binners/maxbin/*`**, **`results/bins/`**
+  Carpeta con archivos FASTA por bin generados por los distintos binners y, finalmente, los bins integrados por DAS Tool (en `results/bins/`).
+  **Uso:** obtener MAGs para análisis taxonómico/funzional, evaluar calidad (completeness/contamination).
+
+* **`intermediate/17.SRR19746202.checkM`** y opcionalmente **`intermediate/17.SRR19746202.gtdbtk`**
+  Resultados de CheckM2 (completeness/contamination) y GTDB-Tk (clasificación GTDB si se solicitó).
+  **Uso:** filtrar MAGs de alta calidad, nombrado taxonómico robusto.
+
+* **`results/18.SRR19746202.bintable`**
+  Tabla resumen con metadatos de cada bin: nombre, taxonomía, tamaño, GC, nº contigs, completeness, contamination, y abundancias (coverage/TPM) por muestra.
+  **Uso:** selección de bins para downstream (pangenoma, phylogenomics, ensamblado de genomas). 
+
+---
+
+### Tablas agregadas (script `sqm2tables.py`) — **la clave para análisis en R**
+
+Al final SqueezeMeta ejecuta (o puedes ejecutar) `sqm2tables.py` que genera tablas con features (taxones/funciones) en filas y muestras en columnas. Estos ficheros van a `SRR19746202/results/tables/`. Algunos archivos clave:
+
+> Ejemplos de archivos en `results/tables/` y su utilidad.
+
+* **`SRR19746202.orfs.sequences.tsv`**
+  Secuencias de ORFs listadas en formato tabular (útil para extraer secuencias concretas).
+
+* **`SRR19746202.orf.tax.*.tsv`** (varias variantes: `allfilter`, `prokfilter`, `nofilter`)
+  Taxonomía por ORF con distintos criterios de filtrado de identidad.
+  **Uso:** construir perfiles taxonómicos agregados por contig/bin o por rank.
+
+* **`SRR19746202.<RANK>.allfilter.abund.tsv`** (ej. `SRR19746202.phylum.allfilter.abund.tsv`)
+  Tabla con abundancia (número de reads) por taxón y muestra para cada nivel taxonómico (superkingdom, phylum, class, order, family, genus, species).
+  **Uso:** análisis de composición taxonómica y cálculo de diversidad (α y β).
+
+* **`SRR19746202.KO.abunds.tsv`, `SRR19746202.COG.abunds.tsv`, `SRR19746202.PFAM.abunds.tsv`**
+  Abundancias por función (KO/COG/PFAM).
+  **Uso:** análisis funcional y de pathways; normalización a TPM (`*.tpm.tsv`) y cálculo de copy-numbers (`*.copyNumber.tsv`).
+
+* **`SRR19746202.<classification>.tpm.tsv`**
+  Tablas normalizadas (TPM) para comparaciones entre muestras.
+
+* **Archivos derivados:** `SRR19746202.<rank>.prokfilter.abund.tsv`, `SRR19746202.<classification>.names.tsv`, `SRR19746202.RecA.tsv` (usada para normalizar a copias/genoma).
+  **Uso:** todo lo anterior (copias, normalizaciones, filtros). 
+
+---
+
+### ¿Qué puedes hacer con cada tipo de archivo? — ejemplos prácticos
+
+* **`01.*.fasta` (contigs)** → re-ensamblado, extracción de secuencias, análisis genómico, alimentación para binners/anvì'o.
+* **`03.*.faa` / `04.*.diamond` / `05.*.pfam.hmm`** → armar matrices funcionales (KEGG/COG/PFAM) y detectar funciones relevantes (resistencia a antibióticos, rutas metabólicas, dominios).
+* **`10.*.mapcount` / `contigcov`** → calcular TPM/RPKM/coverage por gen/contig y comparar abundancias entre muestras (o en una sola muestra, identificar genes más expresados/abundantes).
+* **`13.*.orftable`** → tabla maestra con anotaciones combinadas (taxonomía + función + métricas de abundancia) — ideal para filtros y para construir queries del estilo “toma todos los ORFs asignados a COG X y con TPM > Y”. 
+* **`results/tables/*.abund.tsv`** → entrada directa a R/phyloseq/SQMtools para calcular índices de diversidad, hacer heatmaps, PCoA, clustering, etc.
+
+---
+
+### Código en **R**: calcular y graficar la diversidad (α) de la muestra `SRR19746202`
+
+Este ejemplo asume que ejecutaste SqueezeMeta y que `SRR19746202/results/tables/SRR19746202.phylum.allfilter.abund.tsv` existe. El script:
+
+* Lee la tabla de abundancias a nivel **phylum** (puedes cambiar a `genus` o `species`).
+* Calcula índices de diversidad α: **Riqueza observada**, **Índice de Shannon** y **Índice de Simpson** (usando `vegan`).
+* Grafica un barplot de las 10 phyla más abundantes y muestra los índices en el título/subtítulo.
+
+```r
+# R: gráfica de diversidad α para SRR19746202 (SqueezeMeta)
+# Requisitos: install.packages(c("readr","dplyr","tibble","ggplot2","vegan"))
+library(readr)
+library(dplyr)
+library(tibble)
+library(ggplot2)
+library(vegan)
+
+# --- Ajusta estas variables según tu proyecto ---
+project <- "SRR19746202"                         # nombre del proyecto SqueezeMeta
+tables_dir <- file.path(project, "results", "tables")  # ruta a tables
+tax_rank_file <- file.path(tables_dir, paste0(project, ".phylum.allfilter.abund.tsv"))
+sample_name <- "SRR19746202"                    # nombre de la muestra/columna esperada
+
+# --- Carga la tabla (la primera columna suele ser el nombre del taxón) ---
+if(!file.exists(tax_rank_file)){
+  stop("No encontré el archivo: ", tax_rank_file, "\nAsegúrate que 'sqm2tables.py' se ejecutó y la ruta está correcta.")
+}
+
+taxa_tbl <- read_tsv(tax_rank_file, col_types = cols(.default = "c"))  # leer todo como texto al inicio
+
+# La tabla típica tiene: TAXON <TAB> Sample1 <TAB> Sample2 ...
+# Convertir valores de abundancia a numérico (saltar el nombre del taxón)
+taxa_tbl <- taxa_tbl %>%
+  rename(Taxon = 1) %>%
+  mutate(across(-Taxon, ~ as.numeric(.)))
+
+# Verifica que la muestra exista
+if(!sample_name %in% colnames(taxa_tbl)){
+  stop("La muestra '", sample_name, "' no está en las columnas del archivo. Columnas disponibles:\n",
+       paste(colnames(taxa_tbl), collapse=", "))
+}
+
+# Extrae conteos para la muestra
+counts <- taxa_tbl %>%
+  select(Taxon, all_of(sample_name)) %>%
+  rename(Count = all_of(sample_name)) %>%
+  mutate(Count = ifelse(is.na(Count), 0, Count))
+
+# Filtrar phyla con 0 conteos (opcional)
+counts_nonzero <- counts %>% filter(Count > 0)
+
+# --- Cálculo de índices de diversidad (vegan expects a numeric vector o matriz) ---
+# Richness (observed), Shannon, Simpson
+abund_vector <- counts_nonzero$Count
+richness_obs <- sum(abund_vector > 0)
+shannon_H <- diversity(abund_vector, index = "shannon")     # ln base
+simpson_D <- diversity(abund_vector, index = "simpson")     # 1 - sum(p_i^2) (depending on vegan's impl.)
+
+# Convertimos Simpson a "1 - D" como índice de diversidad de Simpson (si quieres la "simpson reciprocal" usa 1/D)
+simpson_index <- 1 - simpson_D
+
+# Resumen de índices
+diversity_summary <- tibble(
+  Sample = sample_name,
+  Observed_richness = richness_obs,
+  Shannon_H = round(shannon_H, 4),
+  Simpson = round(simpson_index, 4)
+)
+print(diversity_summary)
+
+# --- Preparar datos para el barplot de composición (top N phyla) ---
+topn <- 10
+top_phyla <- counts %>%
+  arrange(desc(Count)) %>%
+  slice_head(n = topn) %>%
+  mutate(Proportion = Count / sum(counts$Count))
+
+# Barplot con ggplot2
+p <- ggplot(top_phyla, aes(x = reorder(Taxon, Count), y = Count)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = paste0("Composición por phylum — muestra: ", sample_name),
+    subtitle = paste0("Top ", topn, " phyla. Shannon H = ", round(shannon_H,3),
+                      " | Simpson = ", round(simpson_index,3)),
+    x = "Phylum",
+    y = "Reads (abundancia cruda)"
+  ) +
+  theme_minimal(base_size = 14)
+
+print(p)
+
+# --- Opcional: guardar la figura ---
+# ggsave(filename = paste0(project, "_", sample_name, "_phylum_top", topn, ".png"), plot = p, width = 8, height = 6)
+```
+
+#### Notas sobre el script
+
+* Si prefieres trabajar con **TPM** (normalizado) usa el archivo `SRR19746202.phylum.tpm.tsv` o `SRR19746202.phylum.<variant>.tpm.tsv` si los generaste en `sqm2tables`. La lógica del script es la misma, solo cambia la lectura del archivo.
+* `vegan::diversity()` calcula Shannon (H) y Simpson (por defecto `simpson` devuelve la suma ∑ p\_i^2 — aquí lo transformamos a `1 - D` para interpretarlo como probabilidad de que dos individuos sean de distinto taxón). Ajusta a la métrica que prefieras.
+* Para análisis comparativos entre **varias** muestras conviene crear una matriz (taxa × samples) y calcular rarefaction curves, índices α para cada muestra y β-diversity (Bray-Curtis, PCoA, NMDS) con `vegan` o exportar a `phyloseq`. También puedes cargar el proyecto directamente con el paquete **SQMtools** (`loadSQM()`) para aprovechar funciones pre-hechas. 
+
+---
+
+### Flujo recomendado para análisis posteriores
+
+1. Generar tablas agregadas con `sqm2tables.py` (si no se crearon). ([squeezemeta.readthedocs.io][3])
+2. Cargar las tablas en R (o usar `loadSQM()` de **SQMtools**) para generar objetos `phyloseq` / `microeco` si vas a hacer ecología microbiana compleja. 
+3. Para pangenome (si tu interés es comparar genomas o MAGs) extraer secuencias de `results/bins/` y usar herramientas especializadas (ppanggolin, Roary, Panaroo, etc.). (SqueezeMeta no genera directamente una "matriz pangenoma" tipo Roary; su fortaleza es la anotación, mapeo y bins). 
+

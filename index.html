@@ -97,7 +97,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#automatización" id="toc-automatización" class="nav-link" data-scroll-target="#automatización">Automatización</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#squeezemeta" id="toc-squeezemeta" class="nav-link" data-scroll-target="#squeezemeta">SqueezeMeta</a></li>
+  <li><a href="#squeezemeta" id="toc-squeezemeta" class="nav-link" data-scroll-target="#squeezemeta">SqueezeMeta</a>
+  <ul class="collapse">
+  <li><a href="#archivos-principales-que-genera-squeezemeta-organizados-por-etapa" id="toc-archivos-principales-que-genera-squeezemeta-organizados-por-etapa" class="nav-link" data-scroll-target="#archivos-principales-que-genera-squeezemeta-organizados-por-etapa">Archivos principales que genera SqueezeMeta (organizados por etapa)</a></li>
+  <li><a href="#ensamblaje" id="toc-ensamblaje" class="nav-link" data-scroll-target="#ensamblaje">Ensamblaje</a></li>
+  <li><a href="#detección-de-rnas" id="toc-detección-de-rnas" class="nav-link" data-scroll-target="#detección-de-rnas">Detección de RNAs</a></li>
+  <li><a href="#predicción-de-genes-orfs" id="toc-predicción-de-genes-orfs" class="nav-link" data-scroll-target="#predicción-de-genes-orfs">Predicción de genes (ORFs)</a></li>
+  <li><a href="#anotaciones-homólogas-y-hmms" id="toc-anotaciones-homólogas-y-hmms" class="nav-link" data-scroll-target="#anotaciones-homólogas-y-hmms">Anotaciones homólogas y HMMs</a></li>
+  <li><a href="#asignación-taxonómica-y-funcional" id="toc-asignación-taxonómica-y-funcional" class="nav-link" data-scroll-target="#asignación-taxonómica-y-funcional">Asignación taxonómica y funcional</a></li>
+  <li><a href="#mapeo-de-lecturas-y-medidas-de-abundancia" id="toc-mapeo-de-lecturas-y-medidas-de-abundancia" class="nav-link" data-scroll-target="#mapeo-de-lecturas-y-medidas-de-abundancia">Mapeo de lecturas y medidas de abundancia</a></li>
+  <li><a href="#binning-mags" id="toc-binning-mags" class="nav-link" data-scroll-target="#binning-mags">Binning (MAGs)</a></li>
+  <li><a href="#tablas-agregadas-script-sqm2tables.py-la-clave-para-análisis-en-r" id="toc-tablas-agregadas-script-sqm2tables.py-la-clave-para-análisis-en-r" class="nav-link" data-scroll-target="#tablas-agregadas-script-sqm2tables.py-la-clave-para-análisis-en-r">Tablas agregadas (script <code>sqm2tables.py</code>) — <strong>la clave para análisis en R</strong></a></li>
+  <li><a href="#qué-puedes-hacer-con-cada-tipo-de-archivo-ejemplos-prácticos" id="toc-qué-puedes-hacer-con-cada-tipo-de-archivo-ejemplos-prácticos" class="nav-link" data-scroll-target="#qué-puedes-hacer-con-cada-tipo-de-archivo-ejemplos-prácticos">¿Qué puedes hacer con cada tipo de archivo? — ejemplos prácticos</a></li>
+  <li><a href="#código-en-r-calcular-y-graficar-la-diversidad-α-de-la-muestra-srr19746202" id="toc-código-en-r-calcular-y-graficar-la-diversidad-α-de-la-muestra-srr19746202" class="nav-link" data-scroll-target="#código-en-r-calcular-y-graficar-la-diversidad-α-de-la-muestra-srr19746202">Código en <strong>R</strong>: calcular y graficar la diversidad (α) de la muestra <code>SRR19746202</code></a></li>
+  <li><a href="#flujo-recomendado-para-análisis-posteriores" id="toc-flujo-recomendado-para-análisis-posteriores" class="nav-link" data-scroll-target="#flujo-recomendado-para-análisis-posteriores">Flujo recomendado para análisis posteriores</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -149,7 +163,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#automatización" id="toc-automatización">Automatización</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#squeezemeta" id="toc-squeezemeta">SqueezeMeta</a></li>
+  <li><a href="#squeezemeta" id="toc-squeezemeta">SqueezeMeta</a>
+  <ul>
+  <li><a href="#archivos-principales-que-genera-squeezemeta-organizados-por-etapa" id="toc-archivos-principales-que-genera-squeezemeta-organizados-por-etapa">Archivos principales que genera SqueezeMeta (organizados por etapa)</a></li>
+  <li><a href="#ensamblaje" id="toc-ensamblaje">Ensamblaje</a></li>
+  <li><a href="#detección-de-rnas" id="toc-detección-de-rnas">Detección de RNAs</a></li>
+  <li><a href="#predicción-de-genes-orfs" id="toc-predicción-de-genes-orfs">Predicción de genes (ORFs)</a></li>
+  <li><a href="#anotaciones-homólogas-y-hmms" id="toc-anotaciones-homólogas-y-hmms">Anotaciones homólogas y HMMs</a></li>
+  <li><a href="#asignación-taxonómica-y-funcional" id="toc-asignación-taxonómica-y-funcional">Asignación taxonómica y funcional</a></li>
+  <li><a href="#mapeo-de-lecturas-y-medidas-de-abundancia" id="toc-mapeo-de-lecturas-y-medidas-de-abundancia">Mapeo de lecturas y medidas de abundancia</a></li>
+  <li><a href="#binning-mags" id="toc-binning-mags">Binning (MAGs)</a></li>
+  <li><a href="#tablas-agregadas-script-sqm2tables.py-la-clave-para-análisis-en-r" id="toc-tablas-agregadas-script-sqm2tables.py-la-clave-para-análisis-en-r">Tablas agregadas (script <code>sqm2tables.py</code>) — <strong>la clave para análisis en R</strong></a></li>
+  <li><a href="#qué-puedes-hacer-con-cada-tipo-de-archivo-ejemplos-prácticos" id="toc-qué-puedes-hacer-con-cada-tipo-de-archivo-ejemplos-prácticos">¿Qué puedes hacer con cada tipo de archivo? — ejemplos prácticos</a></li>
+  <li><a href="#código-en-r-calcular-y-graficar-la-diversidad-α-de-la-muestra-srr19746202" id="toc-código-en-r-calcular-y-graficar-la-diversidad-α-de-la-muestra-srr19746202">Código en <strong>R</strong>: calcular y graficar la diversidad (α) de la muestra <code>SRR19746202</code></a></li>
+  <li><a href="#flujo-recomendado-para-análisis-posteriores" id="toc-flujo-recomendado-para-análisis-posteriores">Flujo recomendado para análisis posteriores</a></li>
+  </ul></li>
   </ul>
 </nav>
 <div class="quarto-figure quarto-figure-center">
@@ -512,6 +540,224 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> deactivate</span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<hr>
+<section id="archivos-principales-que-genera-squeezemeta-organizados-por-etapa" class="level3">
+<h3 class="anchored" data-anchor-id="archivos-principales-que-genera-squeezemeta-organizados-por-etapa">Archivos principales que genera SqueezeMeta (organizados por etapa)</h3>
+<blockquote class="blockquote">
+<p><strong>Estructura general</strong>:</p>
+<pre><code>SRR19746202/
+├─ results/
+│  ├─ 01.SRR19746202.fasta
+│  ├─ 02.SRR19746202.rnas
+│  ├─ 03.SRR19746202.fna
+│  ├─ 03.SRR19746202.faa
+│  ├─ 06.SRR19746202.fun3.tax.wranks
+│  ├─ 07.SRR19746202.fun3.kegg
+│  ├─ 10.SRR19746202.mappingstat
+│  ├─ results/bins/...
+│  └─ tables/  ← tablas agregadas (phylum.abund.tsv, kegg.tpm.tsv, etc.)
+└─ intermediate/
+   └─ (muchos archivos intermedios: diamond, pfam, contigcov, mapcount...)</code></pre>
+</blockquote>
+<hr>
+</section>
+<section id="ensamblaje" class="level3">
+<h3 class="anchored" data-anchor-id="ensamblaje">Ensamblaje</h3>
+<ul>
+<li><p><strong><code>results/01.SRR19746202.fasta</code></strong> Contiene los contigs resultantes del ensamblaje (fasta). <strong>Uso:</strong> inspección de contigs, generación de ORFs, entrada para binning (anvì’o, metaWRAP, etc.), extracción de secuencias para búsquedas BLAST o para construir pangenomas.</p></li>
+<li><p><strong><code>intermediate/01.SRR19746202.lon</code></strong> y <strong><code>intermediate/01.SRR19746202.stats</code></strong> Longitudes y estadísticas del ensamblaje (N50, N90, nº de contigs, etc.). <strong>Uso:</strong> control de calidad del ensamblaje y comparaciones entre muestras.</p></li>
+</ul>
+<hr>
+</section>
+<section id="detección-de-rnas" class="level3">
+<h3 class="anchored" data-anchor-id="detección-de-rnas">Detección de RNAs</h3>
+<ul>
+<li><p><strong><code>results/02.SRR19746202.rnas</code></strong> (fasta con rRNAs y tRNAs encontrados) <strong>Uso:</strong> localizar 16S/23S para taxonomía basada en 16S, filtrar rRNA de contigs, o extraer genes ribosomales para análisis filogenéticos.</p></li>
+<li><p><strong><code>results/02.SRR19746202.16S</code></strong> Asignaciones taxonómicas (ej. RDP) de las 16S detectadas. <strong>Uso:</strong> obtener una vista rápida de taxa identificables por 16S.</p></li>
+</ul>
+<hr>
+</section>
+<section id="predicción-de-genes-orfs" class="level3">
+<h3 class="anchored" data-anchor-id="predicción-de-genes-orfs">Predicción de genes (ORFs)</h3>
+<ul>
+<li><p><strong><code>results/03.SRR19746202.fna</code></strong> Secuencias nucleotídicas de ORFs predichos (CDS). <strong>Uso:</strong> anotación funcional y cálculo de abundancias por gen.</p></li>
+<li><p><strong><code>results/03.SRR19746202.faa</code></strong> Secuencias aminoacídicas de los ORFs predichos. <strong>Uso:</strong> búsquedas HMM (pfam), BLAST/DIAMOND contra bases de datos funcionales/taxonómicas, clustering, construcción de pangenoma de genes.</p></li>
+<li><p><strong><code>results/03.SRR19746202.gff</code></strong> Posiciones de genes en los contigs (GFF). <strong>Uso:</strong> visualizar en genome browser, extraer ORFs por coordenadas, integrar con anotaciones externas.</p></li>
+</ul>
+<hr>
+</section>
+<section id="anotaciones-homólogas-y-hmms" class="level3">
+<h3 class="anchored" data-anchor-id="anotaciones-homólogas-y-hmms">Anotaciones homólogas y HMMs</h3>
+<ul>
+<li><p><strong><code>intermediate/04.SRR19746202.nr.diamond</code></strong>, <strong><code>04.SRR19746202.kegg.diamond</code></strong>, <strong><code>04.SRR19746202.eggnog.diamond</code></strong> Resultados DIAMOND (hits) contra bases NR/KEGG/eggNOG. <strong>Uso:</strong> base para asignación taxonómica y funcional de ORFs (mejores hits, IDs KEGG/COG).</p></li>
+<li><p><strong><code>intermediate/05.SRR19746202.pfam.hmm</code></strong> Resultados HMM (pfam) — dominios detectados. <strong>Uso:</strong> anotación de dominios, categorización funcional, agrupamiento por familias.</p></li>
+</ul>
+<hr>
+</section>
+<section id="asignación-taxonómica-y-funcional" class="level3">
+<h3 class="anchored" data-anchor-id="asignación-taxonómica-y-funcional">Asignación taxonómica y funcional</h3>
+<ul>
+<li><p><strong><code>results/06.SRR19746202.fun3.tax.wranks</code></strong> (y la variante <code>noidfilter</code>) Taxonomía asignada por ORF con rangos taxonómicos (kingdom→species). <strong>Uso:</strong> construir perfiles taxonómicos por gen/contig/bin; filtrar por identidad; estimar composición (abundancias por taxón).</p></li>
+<li><p><strong><code>results/07.SRR19746202.fun3.cog</code></strong>, <strong><code>results/07.SRR19746202.fun3.kegg</code></strong>, <strong><code>results/07.SRR19746202.pfam</code></strong> Asignaciones funcionales (COG, KEGG, PFAM) por ORF. <strong>Uso:</strong> agrupar funciones, análisis funcional (pathways, enriquecimiento), generación de tablas de abundancia funcional.</p></li>
+</ul>
+<hr>
+</section>
+<section id="mapeo-de-lecturas-y-medidas-de-abundancia" class="level3">
+<h3 class="anchored" data-anchor-id="mapeo-de-lecturas-y-medidas-de-abundancia">Mapeo de lecturas y medidas de abundancia</h3>
+<ul>
+<li><p><strong><code>results/10.SRR19746202.mappingstat</code></strong> Estadísticas globales de mapeo (por muestra). <strong>Uso:</strong> control de calidad del mapeo, porcentaje de lecturas mapeadas.</p></li>
+<li><p><strong><code>intermediate/10.SRR19746202.mapcount</code></strong> Tabla con: ORF, longitud, nº reads mapeados, bases, RPKM, cobertura, TPM, y muestra. <strong>Uso:</strong> calcular abundancias por gen, normalizar y comparar entre muestras; entrada para <code>sqm2tables.py</code>.</p></li>
+<li><p><strong><code>intermediate/10.SRR19746202.contigcov</code></strong> Cobertura/RPKM/TPM por contig en cada muestra. <strong>Uso:</strong> detectar contigs altamente cubiertos, evaluar robustez de bins.</p></li>
+</ul>
+<hr>
+</section>
+<section id="binning-mags" class="level3">
+<h3 class="anchored" data-anchor-id="binning-mags">Binning (MAGs)</h3>
+<ul>
+<li><p><strong><code>intermediate/binners/metabat/*</code></strong>, <strong><code>intermediate/binners/maxbin/*</code></strong>, <strong><code>results/bins/</code></strong> Carpeta con archivos FASTA por bin generados por los distintos binners y, finalmente, los bins integrados por DAS Tool (en <code>results/bins/</code>). <strong>Uso:</strong> obtener MAGs para análisis taxonómico/funzional, evaluar calidad (completeness/contamination).</p></li>
+<li><p><strong><code>intermediate/17.SRR19746202.checkM</code></strong> y opcionalmente <strong><code>intermediate/17.SRR19746202.gtdbtk</code></strong> Resultados de CheckM2 (completeness/contamination) y GTDB-Tk (clasificación GTDB si se solicitó). <strong>Uso:</strong> filtrar MAGs de alta calidad, nombrado taxonómico robusto.</p></li>
+<li><p><strong><code>results/18.SRR19746202.bintable</code></strong> Tabla resumen con metadatos de cada bin: nombre, taxonomía, tamaño, GC, nº contigs, completeness, contamination, y abundancias (coverage/TPM) por muestra. <strong>Uso:</strong> selección de bins para downstream (pangenoma, phylogenomics, ensamblado de genomas).</p></li>
+</ul>
+<hr>
+</section>
+<section id="tablas-agregadas-script-sqm2tables.py-la-clave-para-análisis-en-r" class="level3">
+<h3 class="anchored" data-anchor-id="tablas-agregadas-script-sqm2tables.py-la-clave-para-análisis-en-r">Tablas agregadas (script <code>sqm2tables.py</code>) — <strong>la clave para análisis en R</strong></h3>
+<p>Al final SqueezeMeta ejecuta (o puedes ejecutar) <code>sqm2tables.py</code> que genera tablas con features (taxones/funciones) en filas y muestras en columnas. Estos ficheros van a <code>SRR19746202/results/tables/</code>. Algunos archivos clave:</p>
+<blockquote class="blockquote">
+<p>Ejemplos de archivos en <code>results/tables/</code> y su utilidad.</p>
+</blockquote>
+<ul>
+<li><p><strong><code>SRR19746202.orfs.sequences.tsv</code></strong> Secuencias de ORFs listadas en formato tabular (útil para extraer secuencias concretas).</p></li>
+<li><p><strong><code>SRR19746202.orf.tax.*.tsv</code></strong> (varias variantes: <code>allfilter</code>, <code>prokfilter</code>, <code>nofilter</code>) Taxonomía por ORF con distintos criterios de filtrado de identidad. <strong>Uso:</strong> construir perfiles taxonómicos agregados por contig/bin o por rank.</p></li>
+<li><p><strong><code>SRR19746202.&lt;RANK&gt;.allfilter.abund.tsv</code></strong> (ej. <code>SRR19746202.phylum.allfilter.abund.tsv</code>) Tabla con abundancia (número de reads) por taxón y muestra para cada nivel taxonómico (superkingdom, phylum, class, order, family, genus, species). <strong>Uso:</strong> análisis de composición taxonómica y cálculo de diversidad (α y β).</p></li>
+<li><p><strong><code>SRR19746202.KO.abunds.tsv</code>, <code>SRR19746202.COG.abunds.tsv</code>, <code>SRR19746202.PFAM.abunds.tsv</code></strong> Abundancias por función (KO/COG/PFAM). <strong>Uso:</strong> análisis funcional y de pathways; normalización a TPM (<code>*.tpm.tsv</code>) y cálculo de copy-numbers (<code>*.copyNumber.tsv</code>).</p></li>
+<li><p><strong><code>SRR19746202.&lt;classification&gt;.tpm.tsv</code></strong> Tablas normalizadas (TPM) para comparaciones entre muestras.</p></li>
+<li><p><strong>Archivos derivados:</strong> <code>SRR19746202.&lt;rank&gt;.prokfilter.abund.tsv</code>, <code>SRR19746202.&lt;classification&gt;.names.tsv</code>, <code>SRR19746202.RecA.tsv</code> (usada para normalizar a copias/genoma). <strong>Uso:</strong> todo lo anterior (copias, normalizaciones, filtros).</p></li>
+</ul>
+<hr>
+</section>
+<section id="qué-puedes-hacer-con-cada-tipo-de-archivo-ejemplos-prácticos" class="level3">
+<h3 class="anchored" data-anchor-id="qué-puedes-hacer-con-cada-tipo-de-archivo-ejemplos-prácticos">¿Qué puedes hacer con cada tipo de archivo? — ejemplos prácticos</h3>
+<ul>
+<li><strong><code>01.*.fasta</code> (contigs)</strong> → re-ensamblado, extracción de secuencias, análisis genómico, alimentación para binners/anvì’o.</li>
+<li><strong><code>03.*.faa</code> / <code>04.*.diamond</code> / <code>05.*.pfam.hmm</code></strong> → armar matrices funcionales (KEGG/COG/PFAM) y detectar funciones relevantes (resistencia a antibióticos, rutas metabólicas, dominios).</li>
+<li><strong><code>10.*.mapcount</code> / <code>contigcov</code></strong> → calcular TPM/RPKM/coverage por gen/contig y comparar abundancias entre muestras (o en una sola muestra, identificar genes más expresados/abundantes).</li>
+<li><strong><code>13.*.orftable</code></strong> → tabla maestra con anotaciones combinadas (taxonomía + función + métricas de abundancia) — ideal para filtros y para construir queries del estilo “toma todos los ORFs asignados a COG X y con TPM &gt; Y”.</li>
+<li><strong><code>results/tables/*.abund.tsv</code></strong> → entrada directa a R/phyloseq/SQMtools para calcular índices de diversidad, hacer heatmaps, PCoA, clustering, etc.</li>
+</ul>
+<hr>
+</section>
+<section id="código-en-r-calcular-y-graficar-la-diversidad-α-de-la-muestra-srr19746202" class="level3">
+<h3 class="anchored" data-anchor-id="código-en-r-calcular-y-graficar-la-diversidad-α-de-la-muestra-srr19746202">Código en <strong>R</strong>: calcular y graficar la diversidad (α) de la muestra <code>SRR19746202</code></h3>
+<p>Este ejemplo asume que ejecutaste SqueezeMeta y que <code>SRR19746202/results/tables/SRR19746202.phylum.allfilter.abund.tsv</code> existe. El script:</p>
+<ul>
+<li>Lee la tabla de abundancias a nivel <strong>phylum</strong> (puedes cambiar a <code>genus</code> o <code>species</code>).</li>
+<li>Calcula índices de diversidad α: <strong>Riqueza observada</strong>, <strong>Índice de Shannon</strong> y <strong>Índice de Simpson</strong> (usando <code>vegan</code>).</li>
+<li>Grafica un barplot de las 10 phyla más abundantes y muestra los índices en el título/subtítulo.</li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R: gráfica de diversidad α para SRR19746202 (SqueezeMeta)</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Requisitos: install.packages(c("readr","dplyr","tibble","ggplot2","vegan"))</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vegan)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Ajusta estas variables según tu proyecto ---</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>project <span class="ot">&lt;-</span> <span class="st">"SRR19746202"</span>                         <span class="co"># nombre del proyecto SqueezeMeta</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>tables_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(project, <span class="st">"results"</span>, <span class="st">"tables"</span>)  <span class="co"># ruta a tables</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>tax_rank_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(tables_dir, <span class="fu">paste0</span>(project, <span class="st">".phylum.allfilter.abund.tsv"</span>))</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>sample_name <span class="ot">&lt;-</span> <span class="st">"SRR19746202"</span>                    <span class="co"># nombre de la muestra/columna esperada</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Carga la tabla (la primera columna suele ser el nombre del taxón) ---</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(tax_rank_file)){</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"No encontré el archivo: "</span>, tax_rank_file, <span class="st">"</span><span class="sc">\n</span><span class="st">Asegúrate que 'sqm2tables.py' se ejecutó y la ruta está correcta."</span>)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>taxa_tbl <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(tax_rank_file, <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">.default =</span> <span class="st">"c"</span>))  <span class="co"># leer todo como texto al inicio</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="co"># La tabla típica tiene: TAXON &lt;TAB&gt; Sample1 &lt;TAB&gt; Sample2 ...</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir valores de abundancia a numérico (saltar el nombre del taxón)</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>taxa_tbl <span class="ot">&lt;-</span> taxa_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Taxon =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="sc">-</span>Taxon, <span class="sc">~</span> <span class="fu">as.numeric</span>(.)))</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Verifica que la muestra exista</span></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span>sample_name <span class="sc">%in%</span> <span class="fu">colnames</span>(taxa_tbl)){</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"La muestra '"</span>, sample_name, <span class="st">"' no está en las columnas del archivo. Columnas disponibles:</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>       <span class="fu">paste</span>(<span class="fu">colnames</span>(taxa_tbl), <span class="at">collapse=</span><span class="st">", "</span>))</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Extrae conteos para la muestra</span></span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> taxa_tbl <span class="sc">%&gt;%</span></span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Taxon, <span class="fu">all_of</span>(sample_name)) <span class="sc">%&gt;%</span></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Count =</span> <span class="fu">all_of</span>(sample_name)) <span class="sc">%&gt;%</span></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Count =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(Count), <span class="dv">0</span>, Count))</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Filtrar phyla con 0 conteos (opcional)</span></span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>counts_nonzero <span class="ot">&lt;-</span> counts <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Count <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Cálculo de índices de diversidad (vegan expects a numeric vector o matriz) ---</span></span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Richness (observed), Shannon, Simpson</span></span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>abund_vector <span class="ot">&lt;-</span> counts_nonzero<span class="sc">$</span>Count</span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>richness_obs <span class="ot">&lt;-</span> <span class="fu">sum</span>(abund_vector <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>shannon_H <span class="ot">&lt;-</span> <span class="fu">diversity</span>(abund_vector, <span class="at">index =</span> <span class="st">"shannon"</span>)     <span class="co"># ln base</span></span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>simpson_D <span class="ot">&lt;-</span> <span class="fu">diversity</span>(abund_vector, <span class="at">index =</span> <span class="st">"simpson"</span>)     <span class="co"># 1 - sum(p_i^2) (depending on vegan's impl.)</span></span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertimos Simpson a "1 - D" como índice de diversidad de Simpson (si quieres la "simpson reciprocal" usa 1/D)</span></span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>simpson_index <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> simpson_D</span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Resumen de índices</span></span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a>diversity_summary <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sample =</span> sample_name,</span>
+<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a>  <span class="at">Observed_richness =</span> richness_obs,</span>
+<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a>  <span class="at">Shannon_H =</span> <span class="fu">round</span>(shannon_H, <span class="dv">4</span>),</span>
+<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a>  <span class="at">Simpson =</span> <span class="fu">round</span>(simpson_index, <span class="dv">4</span>)</span>
+<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(diversity_summary)</span>
+<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Preparar datos para el barplot de composición (top N phyla) ---</span></span>
+<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a>topn <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a>top_phyla <span class="ot">&lt;-</span> counts <span class="sc">%&gt;%</span></span>
+<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Count)) <span class="sc">%&gt;%</span></span>
+<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> topn) <span class="sc">%&gt;%</span></span>
+<span id="cb22-67"><a href="#cb22-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Proportion =</span> Count <span class="sc">/</span> <span class="fu">sum</span>(counts<span class="sc">$</span>Count))</span>
+<span id="cb22-68"><a href="#cb22-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-69"><a href="#cb22-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Barplot con ggplot2</span></span>
+<span id="cb22-70"><a href="#cb22-70" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(top_phyla, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Taxon, Count), <span class="at">y =</span> Count)) <span class="sc">+</span></span>
+<span id="cb22-71"><a href="#cb22-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb22-72"><a href="#cb22-72" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb22-73"><a href="#cb22-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb22-74"><a href="#cb22-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"Composición por phylum — muestra: "</span>, sample_name),</span>
+<span id="cb22-75"><a href="#cb22-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste0</span>(<span class="st">"Top "</span>, topn, <span class="st">" phyla. Shannon H = "</span>, <span class="fu">round</span>(shannon_H,<span class="dv">3</span>),</span>
+<span id="cb22-76"><a href="#cb22-76" aria-hidden="true" tabindex="-1"></a>                      <span class="st">" | Simpson = "</span>, <span class="fu">round</span>(simpson_index,<span class="dv">3</span>)),</span>
+<span id="cb22-77"><a href="#cb22-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Phylum"</span>,</span>
+<span id="cb22-78"><a href="#cb22-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Reads (abundancia cruda)"</span></span>
+<span id="cb22-79"><a href="#cb22-79" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb22-80"><a href="#cb22-80" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">14</span>)</span>
+<span id="cb22-81"><a href="#cb22-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-82"><a href="#cb22-82" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
+<span id="cb22-83"><a href="#cb22-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-84"><a href="#cb22-84" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Opcional: guardar la figura ---</span></span>
+<span id="cb22-85"><a href="#cb22-85" aria-hidden="true" tabindex="-1"></a><span class="co"># ggsave(filename = paste0(project, "_", sample_name, "_phylum_top", topn, ".png"), plot = p, width = 8, height = 6)</span></span></code><button title="Copiar al portapapeles" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="notas-sobre-el-script" class="level4">
+<h4 class="anchored" data-anchor-id="notas-sobre-el-script">Notas sobre el script</h4>
+<ul>
+<li>Si prefieres trabajar con <strong>TPM</strong> (normalizado) usa el archivo <code>SRR19746202.phylum.tpm.tsv</code> o <code>SRR19746202.phylum.&lt;variant&gt;.tpm.tsv</code> si los generaste en <code>sqm2tables</code>. La lógica del script es la misma, solo cambia la lectura del archivo.</li>
+<li><code>vegan::diversity()</code> calcula Shannon (H) y Simpson (por defecto <code>simpson</code> devuelve la suma ∑ p_i^2 — aquí lo transformamos a <code>1 - D</code> para interpretarlo como probabilidad de que dos individuos sean de distinto taxón). Ajusta a la métrica que prefieras.</li>
+<li>Para análisis comparativos entre <strong>varias</strong> muestras conviene crear una matriz (taxa × samples) y calcular rarefaction curves, índices α para cada muestra y β-diversity (Bray-Curtis, PCoA, NMDS) con <code>vegan</code> o exportar a <code>phyloseq</code>. También puedes cargar el proyecto directamente con el paquete <strong>SQMtools</strong> (<code>loadSQM()</code>) para aprovechar funciones pre-hechas.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="flujo-recomendado-para-análisis-posteriores" class="level3">
+<h3 class="anchored" data-anchor-id="flujo-recomendado-para-análisis-posteriores">Flujo recomendado para análisis posteriores</h3>
+<ol type="1">
+<li>Generar tablas agregadas con <code>sqm2tables.py</code> (si no se crearon). ([squeezemeta.readthedocs.io][3])</li>
+<li>Cargar las tablas en R (o usar <code>loadSQM()</code> de <strong>SQMtools</strong>) para generar objetos <code>phyloseq</code> / <code>microeco</code> si vas a hacer ecología microbiana compleja.</li>
+<li>Para pangenome (si tu interés es comparar genomas o MAGs) extraer secuencias de <code>results/bins/</code> y usar herramientas especializadas (ppanggolin, Roary, Panaroo, etc.). (SqueezeMeta no genera directamente una “matriz pangenoma” tipo Roary; su fortaleza es la anotación, mapeo y bins).</li>
+</ol>
+</section>
 </section>
 
 </main>
